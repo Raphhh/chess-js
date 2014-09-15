@@ -18,7 +18,6 @@ var Chess = (function(Chess) {
                 position: position,
                 initialPosition: position,
                 displacements: displacements,
-                lock: false,
                 currentDirectionId: 0
             };
         }
