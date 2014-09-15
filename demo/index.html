@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>chess demo</title>
+    <link rel="stylesheet" href="./assets/normalize.css"/>
+    <link rel="stylesheet" href="./assets/main.css"/>
+</head>
+<body>
+<h1>chess demo</h1>
+
+<!-- begin demo markup -->
+
+<!-- end demo markup -->
+<p>Check out the <a href="https://github.com/Raphhh/chess-js">project repo</a>.
+
+    <script src="./../dist/chess.js"></script>
+    <script src="./assets/jquery-2.1.1.min.js"></script>
+    <script src="./assets/BoardGui.js"></script>
+
+    <script>
+        /* begin demo script */
+
+        jQuery(function() {
+
+            var start = function(data) {
+
+                //init the game
+                var game = new Chess.Game(data);
+                var interfacer = new Chess.HumanInterface(game);
+
+                //gui interface for the demo
+                var boardGui = new BoardGui(game, interfacer);
+                jQuery('body').append(boardGui.$board);
+            };
+
+            jQuery.getJSON(
+                    './../config/init.json',
+                    start
+            );
+        });
+
+        /* end demo script */
+    </script>
+</body>
+</html>
