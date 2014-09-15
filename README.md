@@ -1,0 +1,1 @@
+see the [chess challenge coding](https://gist.github.com/Raphhh/6dab1aec9df4aca2a697) for the domain, and the demo for the code :)
