@@ -284,10 +284,9 @@ var Chess = (function(Chess) {
             var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
                 newPosition,
                 square,
-                result = [],
-                changeDirection = false;
+                result = [];
 
-            while((newPosition = mover.moveOnce(changeDirection)) !== null) {
+            while((newPosition = mover.moveOnce()) !== null) {
                 try {
                     square = this.__internal__.board.getSquareByPosition(newPosition);
                 } catch(error) { //we are out of board
@@ -296,10 +295,13 @@ var Chess = (function(Chess) {
 
                 if(square && square.isValidForNewPiece(piece)) {
                     result.push(square);
-                    changeDirection = !mover.getCurrentDisplacement().isExtensible() || square.getPiece();
+                    if(!mover.getCurrentDisplacement().isExtensible() || square.getPiece()) {
+                        mover.changeDirection();
+                    }
                 } else {
-                    changeDirection = true;
+                    mover.changeDirection();
                 }
+
             }
 
             return result;
@@ -401,15 +403,10 @@ var Chess = (function(Chess) {
             };
         }
 
-        Mover.prototype.moveOnce = function(changeDirection) {
-
-            if(changeDirection) {
-                if(++this.__internal__.currentDirectionId >= this.__internal__.displacementsSuite.length) {
-                    return null;
-                }
-                this.__internal__.position = this.__internal__.initialPosition;
+        Mover.prototype.moveOnce = function() {
+            if(!this.getCurrentDisplacement()) {
+                return null;
             }
-
             this.__internal__.position = new Chess.Movement.Position(moveXPosition.call(this), moveYPosition.call(this));
             return this.__internal__.position;
         };
@@ -419,6 +416,11 @@ var Chess = (function(Chess) {
                 return this.__internal__.displacementsSuite[this.__internal__.currentDirectionId];
             }
             return null;
+        };
+
+        Mover.prototype.changeDirection = function() {
+            this.__internal__.currentDirectionId++;
+            this.__internal__.position = this.__internal__.initialPosition;
         };
 
         return Mover;

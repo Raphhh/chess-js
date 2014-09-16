@@ -33,10 +33,9 @@ var Chess = (function(Chess) {
             var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
                 newPosition,
                 square,
-                result = [],
-                changeDirection = false;
+                result = [];
 
-            while((newPosition = mover.moveOnce(changeDirection)) !== null) {
+            while((newPosition = mover.moveOnce()) !== null) {
                 try {
                     square = this.__internal__.board.getSquareByPosition(newPosition);
                 } catch(error) { //we are out of board
@@ -45,10 +44,13 @@ var Chess = (function(Chess) {
 
                 if(square && square.isValidForNewPiece(piece)) {
                     result.push(square);
-                    changeDirection = !mover.getCurrentDisplacement().isExtensible() || square.getPiece();
+                    if(!mover.getCurrentDisplacement().isExtensible() || square.getPiece()) {
+                        mover.changeDirection();
+                    }
                 } else {
-                    changeDirection = true;
+                    mover.changeDirection();
                 }
+
             }
 
             return result;
