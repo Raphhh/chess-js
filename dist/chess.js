@@ -346,27 +346,6 @@ var Chess = (function(Chess) {
 
     Chess.Movement = Chess.Movement || {};
 
-    Chess.Movement.DisplacementType = (function() {
-
-        function DisplacementType(vectors, isExtensible) {
-            this.vectors = vectors;
-            this.isExtensible = isExtensible;
-        }
-
-        return DisplacementType;
-
-    })();
-
-    return Chess;
-
-})(Chess || {});
-
-
-var Chess = (function(Chess) {
-    'use strict';
-
-    Chess.Movement = Chess.Movement || {};
-
     Chess.Movement.DisplacementsCalculator = (function() {
 
         function DisplacementsCalculator(board) {
@@ -597,7 +576,7 @@ var Chess = (function(Chess) {
         };
 
         Piece.prototype.incrementDisplacementNumber = function() {
-            this.__internal__.displacementNumber++;
+            this.__internal__.displacementNumber++; //todo bug: setter au début du jeu si les données sont celle d'un jeu en cours.
         };
 
         return Piece;
