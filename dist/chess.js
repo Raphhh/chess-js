@@ -735,6 +735,22 @@ var Chess = (function(Chess) {
                     function(square) {
                         return !square.getPiece();
                     }
+                ),
+                new Chess.Movement.Displacement(
+                    -1,
+                    this.getColor().isWhite() ? 1 : -1,
+                    false,
+                    function(square) {
+                        return Boolean(square.getPiece());
+                    }
+                ),
+                new Chess.Movement.Displacement(
+                    1,
+                    this.getColor().isWhite() ? 1 : -1,
+                    false,
+                    function(square) {
+                        return Boolean(square.getPiece());
+                    }
                 )
             ];
 

@@ -66,6 +66,34 @@ test("getEligibleSquares with piece in front of pawn", function() {
 
 });
 
+test("getEligibleSquares with pawn taking in diagonal", function() {
+
+    var factory = new Chess.Piece.PieceFactory();
+    var pawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece1 = factory.create('pawn', Chess.Piece.Color.BLACK);
+    var piece2 = factory.create('pawn', Chess.Piece.Color.BLACK);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(pawn, new Chess.Movement.Position(1, 1));
+    board.addPiece(piece1, new Chess.Movement.Position(0, 2));
+    board.addPiece(piece2, new Chess.Movement.Position(2, 2));
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    var result = coordinator.getEligibleSquares(pawn);
+
+    strictEqual(result.length, 3);
+
+    strictEqual(result[0].getPosition().getX(), 1);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+    strictEqual(result[1].getPosition().getX(), 0);
+    strictEqual(result[1].getPosition().getY(), 2);
+
+    strictEqual(result[2].getPosition().getX(), 2);
+    strictEqual(result[2].getPosition().getY(), 2);
+
+});
+
 test("getEligibleSquares for rook", function() {
 
     var position = new Chess.Movement.Position(1, 1);
