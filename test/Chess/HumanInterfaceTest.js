@@ -44,5 +44,5 @@ test("getEligibleSquares", function() {
     var interfacer = new Chess.HumanInterface(game);
 
     var result = interfacer.getEligibleSquares('a2');
-    deepEqual(result, ['a3']);
+    deepEqual(result, ['a3', 'a4']);
 });

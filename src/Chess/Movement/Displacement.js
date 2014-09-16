@@ -25,6 +25,9 @@ var Chess = (function(Chess) {
         };
 
         Displacement.prototype.isExtensible = function() {
+            if(this.__internal__.isExtensible instanceof Function) {
+                return this.__internal__.isExtensible();
+            }
             return this.__internal__.isExtensible;
         };
 

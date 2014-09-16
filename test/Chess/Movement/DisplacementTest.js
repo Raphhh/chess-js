@@ -25,6 +25,18 @@ test('isExtensible', function() {
     strictEqual(displacement.isExtensible(), isExtensible);
 });
 
+
+test('isExtensible with callback', function() {
+    var x = 1;
+    var y = 2;
+    var isExtensible = function() {
+        return false;
+    };
+    var displacement = new Chess.Movement.Displacement(x, y, isExtensible);
+
+    strictEqual(displacement.isExtensible(), false);
+});
+
 test('isValid with default callback', function() {
     var x = 1;
     var y = 2;

@@ -15,11 +15,15 @@ var Chess = (function(Chess) {
         };
 
         Pawn.prototype.getDisplacementsSuite = function() {
+            var that = this;
+            var squareDisplacementNumber = 0;
             return [
                 new Chess.Movement.Displacement(
                     0,
                     this.getColor().isWhite() ? 1 : -1,
-                    false,
+                    function() {
+                        return !that.__internal__.displacementNumber && ++squareDisplacementNumber < 2;
+                    },
                     function(square) {
                         return !square.getPiece();
                     }

@@ -8,7 +8,8 @@ var Chess = (function(Chess) {
         function Piece(color) {
             this.__internal__ = {
                 color: color,
-                square: null
+                square: null,
+                displacementNumber: 0
             };
         }
 
@@ -34,6 +35,10 @@ var Chess = (function(Chess) {
 
         Piece.prototype.getDisplacementsSuite = function() {
             return [];
+        };
+
+        Piece.prototype.incrementDisplacementNumber = function() {
+            this.__internal__.displacementNumber++;
         };
 
         return Piece;

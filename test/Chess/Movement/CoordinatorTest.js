@@ -18,6 +18,7 @@ test("getEligibleSquares for white pawn", function() {
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
     var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    piece.incrementDisplacementNumber();//it is not the first displacement
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -36,6 +37,7 @@ test("getEligibleSquares for black pawn", function() {
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
     var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
+    piece.incrementDisplacementNumber();//it is not the first displacement
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -46,6 +48,51 @@ test("getEligibleSquares for black pawn", function() {
     strictEqual(result.length, 1);
     strictEqual(result[0].getPosition().getX(), 1);
     strictEqual(result[0].getPosition().getY(), 0);
+
+});
+
+
+test("getEligibleSquares for white pawn first displacement", function() {
+
+    var position = new Chess.Movement.Position(1, 1);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(piece, position);
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    var result = coordinator.getEligibleSquares(piece);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 1);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+    strictEqual(result[1].getPosition().getX(), 1);
+    strictEqual(result[1].getPosition().getY(), 3);
+
+});
+
+test("getEligibleSquares for black pawn first displacement", function() {
+
+    var position = new Chess.Movement.Position(1, 6);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(piece, position);
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    var result = coordinator.getEligibleSquares(piece);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 1);
+    strictEqual(result[0].getPosition().getY(), 5);
+
+    strictEqual(result[1].getPosition().getX(), 1);
+    strictEqual(result[1].getPosition().getY(), 4);
 
 });
 
@@ -70,6 +117,7 @@ test("getEligibleSquares with pawn taking in diagonal", function() {
 
     var factory = new Chess.Piece.PieceFactory();
     var pawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    pawn.incrementDisplacementNumber();//it is not the first displacement
     var piece1 = factory.create('pawn', Chess.Piece.Color.BLACK);
     var piece2 = factory.create('pawn', Chess.Piece.Color.BLACK);
 
@@ -413,7 +461,7 @@ test("isEligibleMove false", function() {
     board.addPiece(piece, position);
 
     var coordinator = new Chess.Movement.Coordinator(board);
-    var result = coordinator.isEligibleMove(piece, new Chess.Movement.Position(1, 3));
+    var result = coordinator.isEligibleMove(piece, new Chess.Movement.Position(1, 4));
 
     strictEqual(result, false);
 
@@ -431,7 +479,7 @@ test("moveTo error", function() {
     var coordinator = new Chess.Movement.Coordinator(board);
     throws(
         function() {
-            coordinator.moveTo(piece, new Chess.Movement.Position(1, 3));
+            coordinator.moveTo(piece, new Chess.Movement.Position(1, 4));
         },
         Error,
         'Try an invalid move'

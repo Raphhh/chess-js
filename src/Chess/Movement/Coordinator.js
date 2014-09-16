@@ -17,6 +17,7 @@ var Chess = (function(Chess) {
                 throw new Error('Try an invalid move');
             }
             this.__internal__.board.changePiecePosition(piece, position);
+            piece.incrementDisplacementNumber();
         };
 
         Coordinator.prototype.isEligibleMove = function(piece, position) {
