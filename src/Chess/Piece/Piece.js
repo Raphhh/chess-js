@@ -38,7 +38,7 @@ var Chess = (function(Chess) {
         };
 
         Piece.prototype.incrementDisplacementNumber = function() {
-            this.__internal__.displacementNumber++;
+            this.__internal__.displacementNumber++; //todo bug: setter au début du jeu si les données sont celle d'un jeu en cours.
         };
 
         return Piece;
