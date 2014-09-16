@@ -7,9 +7,9 @@ var Chess = (function(Chess) {
 
         function Coordinator(board) {
             this.__internal__ = {
-                board: board
+                board: board,
+                calculator: new Chess.Movement.DisplacementsCalculator(board)
             };
-
         }
 
         Coordinator.prototype.moveTo = function(piece, position) {
@@ -33,35 +33,7 @@ var Chess = (function(Chess) {
         };
 
         Coordinator.prototype.getEligibleSquares = function(piece) {
-
-            if(!piece.getSquare()) {
-                throw new Error('You must add the Piece to the board before trying to move it');
-            }
-
-            var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
-                newPosition,
-                square,
-                result = [];
-
-            while((newPosition = mover.moveOnce()) !== null) {
-                try {
-                    square = this.__internal__.board.getSquareByPosition(newPosition);
-                } catch(error) { //we are out of board
-                    square = null;
-                }
-
-                if(square && square.isValidForNewPiece(piece) && mover.getCurrentDisplacement().isValid(square)) {
-                    result.push(square);
-                    if(!mover.getCurrentDisplacement().isExtensible() || square.getPiece()) {
-                        mover.changeDirection();
-                    }
-                } else {
-                    mover.changeDirection();
-                }
-
-            }
-
-            return result;
+            return this.__internal__.calculator.getEligibleSquares(piece);
         };
 
         return Coordinator;
