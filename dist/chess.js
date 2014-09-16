@@ -293,7 +293,7 @@ var Chess = (function(Chess) {
                     square = null;
                 }
 
-                if(square && square.isValidForNewPiece(piece)) {
+                if(square && square.isValidForNewPiece(piece) && mover.getCurrentDisplacement().isValid(square)) {
                     result.push(square);
                     if(!mover.getCurrentDisplacement().isExtensible() || square.getPiece()) {
                         mover.changeDirection();
