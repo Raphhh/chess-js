@@ -49,6 +49,23 @@ test("getEligibleSquares for black pawn", function() {
 
 });
 
+test("getEligibleSquares with piece in front of pawn", function() {
+
+    var factory = new Chess.Piece.PieceFactory();
+    var pawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(pawn, new Chess.Movement.Position(1, 1));
+    board.addPiece(piece, new Chess.Movement.Position(1, 2));
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    var result = coordinator.getEligibleSquares(pawn);
+
+    strictEqual(result.length, 0);
+
+});
+
 test("getEligibleSquares for rook", function() {
 
     var position = new Chess.Movement.Position(1, 1);

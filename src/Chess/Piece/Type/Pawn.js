@@ -19,7 +19,10 @@ var Chess = (function(Chess) {
                 new Chess.Movement.Displacement(
                     0,
                     this.getColor().isWhite() ? 1 : -1,
-                    false
+                    false,
+                    function(square) {
+                        return !square.getPiece();
+                    }
                 )
             ];
 
