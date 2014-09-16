@@ -574,3 +574,43 @@ test("getEligibleSquares for a piece int front of the same color", function() {
     strictEqual(result[1].getPosition().getY(), 1);
 
 });
+
+
+test('isEnPassantCaptureOpen true', function() {
+
+    var position = new Chess.Movement.Position(1, 1);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var board = new Chess.Board.Board();
+    board.addPiece(piece, position);
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+
+    strictEqual(coordinator.isEnPassantCaptureOpen(piece, new Chess.Movement.Position(1, 3)), true);
+});
+
+test('isEnPassantCaptureOpen with other piece than a pawn', function() {
+
+    var position = new Chess.Movement.Position(1, 1);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var board = new Chess.Board.Board();
+    board.addPiece(piece, position);
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+
+    strictEqual(coordinator.isEnPassantCaptureOpen(piece, new Chess.Movement.Position(1, 3)), false);
+});
+
+test('isEnPassantCaptureOpen with just one square dsiaplecement', function() {
+
+    var position = new Chess.Movement.Position(1, 1);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var board = new Chess.Board.Board();
+    board.addPiece(piece, position);
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+
+    strictEqual(coordinator.isEnPassantCaptureOpen(piece, new Chess.Movement.Position(1, 2)), false);
+});

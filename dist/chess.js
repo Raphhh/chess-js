@@ -276,6 +276,13 @@ var Chess = (function(Chess) {
             return this.getEligibleSquares(piece).indexOf(square) >= 0;
         };
 
+        Coordinator.prototype.isEnPassantCaptureOpen = function(piece, position) {
+            if(piece instanceof Chess.Piece.Type.Pawn) {
+                return piece.getSquare().getPosition().getY() === position.getY() - 2;
+            }
+            return false;
+        };
+
         Coordinator.prototype.getEligibleSquares = function(piece) {
 
             if(!piece.getSquare()) {
