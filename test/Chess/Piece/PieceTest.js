@@ -48,9 +48,9 @@ test("getSquare after die", function() {
     strictEqual(piece.getSquare(), null);
 });
 
-test("getDisplacementType", function() {
+test("getDisplacementsSuite", function() {
 
     var piece = new Chess.Piece.Piece(null);
 
-    strictEqual(piece.getDisplacementType(), null);
+    deepEqual(piece.getDisplacementsSuite(), []);
 });

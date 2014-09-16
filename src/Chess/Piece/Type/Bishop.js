@@ -14,16 +14,13 @@ var Chess = (function(Chess) {
             return 'B';
         };
 
-        Bishop.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 1, y: 1},
-                    {x: 1, y: -1},
-                    {x: -1, y: -1},
-                    {x: -1, y: 1}
-                ],
-                true
-            );
+        Bishop.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(1, 1, true),
+                new Chess.Movement.Displacement(1, -1, true),
+                new Chess.Movement.Displacement(-1, -1, true),
+                new Chess.Movement.Displacement(-1, 1, true)
+            ];
         };
 
         return Bishop;

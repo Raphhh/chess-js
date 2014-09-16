@@ -14,20 +14,17 @@ var Chess = (function(Chess) {
             return 'N';
         };
 
-        Knight.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 1, y: 2},
-                    {x: 2, y: 1},
-                    {x: 2, y: -1},
-                    {x: 1, y: -2},
-                    {x: -1, y: -2},
-                    {x: -2, y: -1},
-                    {x: -2, y: 1},
-                    {x: -1, y: 2}
-                ],
-                false
-            );
+        Knight.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(1, 2, false),
+                new Chess.Movement.Displacement(2, 1, false),
+                new Chess.Movement.Displacement(2, -1, false),
+                new Chess.Movement.Displacement(1, -2, false),
+                new Chess.Movement.Displacement(-1, -2, false),
+                new Chess.Movement.Displacement(-2, -1, false),
+                new Chess.Movement.Displacement(-2, 1, false),
+                new Chess.Movement.Displacement(-1, 2, false)
+            ];
         };
 
         return Knight;

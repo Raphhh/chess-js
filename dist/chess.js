@@ -281,7 +281,7 @@ var Chess = (function(Chess) {
                 throw new Error('You must add the Piece to the board before trying to move it');
             }
 
-            var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementType().vectors),
+            var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
                 newPosition,
                 square,
                 result = [],
@@ -296,7 +296,7 @@ var Chess = (function(Chess) {
 
                 if(square && square.isValidForNewPiece(piece)) {
                     result.push(square);
-                    changeDirection = !piece.getDisplacementType().isExtensible || square.getPiece();
+                    changeDirection = !mover.getCurrentDisplacement().isExtensible() || square.getPiece();
                 } else {
                     changeDirection = true;
                 }
@@ -385,18 +385,18 @@ var Chess = (function(Chess) {
     Chess.Movement.Mover = (function() {
 
         var moveXPosition = function() {
-            return this.__internal__.position.getX() + this.__internal__.displacements[this.__internal__.currentDirectionId].x;
+            return this.__internal__.position.getX() + this.getCurrentDisplacement().getX();
         };
 
         var moveYPosition = function() {
-            return this.__internal__.position.getY() + this.__internal__.displacements[this.__internal__.currentDirectionId].y;
+            return this.__internal__.position.getY() + this.getCurrentDisplacement().getY();
         };
 
-        function Mover(position, displacements) {
+        function Mover(position, displacementsSuite) {
             this.__internal__ = {
                 position: position,
                 initialPosition: position,
-                displacements: displacements,
+                displacementsSuite: displacementsSuite,
                 currentDirectionId: 0
             };
         }
@@ -404,7 +404,7 @@ var Chess = (function(Chess) {
         Mover.prototype.moveOnce = function(changeDirection) {
 
             if(changeDirection) {
-                if(++this.__internal__.currentDirectionId >= this.__internal__.displacements.length) {
+                if(++this.__internal__.currentDirectionId >= this.__internal__.displacementsSuite.length) {
                     return null;
                 }
                 this.__internal__.position = this.__internal__.initialPosition;
@@ -412,6 +412,13 @@ var Chess = (function(Chess) {
 
             this.__internal__.position = new Chess.Movement.Position(moveXPosition.call(this), moveYPosition.call(this));
             return this.__internal__.position;
+        };
+
+        Mover.prototype.getCurrentDisplacement = function() {
+            if(this.__internal__.displacementsSuite[this.__internal__.currentDirectionId]) {
+                return this.__internal__.displacementsSuite[this.__internal__.currentDirectionId];
+            }
+            return null;
         };
 
         return Mover;
@@ -546,8 +553,8 @@ var Chess = (function(Chess) {
             this.__internal__.square = null;
         };
 
-        Piece.prototype.getDisplacementType = function() {
-            return null;
+        Piece.prototype.getDisplacementsSuite = function() {
+            return [];
         };
 
         return Piece;
@@ -610,16 +617,13 @@ var Chess = (function(Chess) {
             return 'B';
         };
 
-        Bishop.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 1, y: 1},
-                    {x: 1, y: -1},
-                    {x: -1, y: -1},
-                    {x: -1, y: 1}
-                ],
-                true
-            );
+        Bishop.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(1, 1, true),
+                new Chess.Movement.Displacement(1, -1, true),
+                new Chess.Movement.Displacement(-1, -1, true),
+                new Chess.Movement.Displacement(-1, 1, true)
+            ];
         };
 
         return Bishop;
@@ -646,20 +650,17 @@ var Chess = (function(Chess) {
             return 'K';
         };
 
-        King.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 0, y: 1},
-                    {x: 1, y: 1},
-                    {x: 1, y: 0},
-                    {x: 1, y: -1},
-                    {x: 0, y: -1},
-                    {x: -1, y: -1},
-                    {x: -1, y: 0},
-                    {x: -1, y: 1}
-                ],
-                false
-            );
+        King.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(0, 1, false),
+                new Chess.Movement.Displacement(1, 1, false),
+                new Chess.Movement.Displacement(1, 0, false),
+                new Chess.Movement.Displacement(1, -1, false),
+                new Chess.Movement.Displacement(0, -1, false),
+                new Chess.Movement.Displacement(-1, -1, false),
+                new Chess.Movement.Displacement(-1, 0, false),
+                new Chess.Movement.Displacement(-1, 1, false)
+            ];
         };
 
         return King;
@@ -686,20 +687,17 @@ var Chess = (function(Chess) {
             return 'N';
         };
 
-        Knight.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 1, y: 2},
-                    {x: 2, y: 1},
-                    {x: 2, y: -1},
-                    {x: 1, y: -2},
-                    {x: -1, y: -2},
-                    {x: -2, y: -1},
-                    {x: -2, y: 1},
-                    {x: -1, y: 2}
-                ],
-                false
-            );
+        Knight.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(1, 2, false),
+                new Chess.Movement.Displacement(2, 1, false),
+                new Chess.Movement.Displacement(2, -1, false),
+                new Chess.Movement.Displacement(1, -2, false),
+                new Chess.Movement.Displacement(-1, -2, false),
+                new Chess.Movement.Displacement(-2, -1, false),
+                new Chess.Movement.Displacement(-2, 1, false),
+                new Chess.Movement.Displacement(-1, 2, false)
+            ];
         };
 
         return Knight;
@@ -726,13 +724,15 @@ var Chess = (function(Chess) {
             return 'P';
         };
 
-        Pawn.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 0, y: this.getColor().isWhite() ? 1 : -1}
-                ],
-                false
-            );
+        Pawn.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(
+                    0,
+                    this.getColor().isWhite() ? 1 : -1,
+                    false
+                )
+            ];
+
         };
 
         return Pawn;
@@ -759,20 +759,17 @@ var Chess = (function(Chess) {
             return 'Q';
         };
 
-        Queen.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 0, y: 1},
-                    {x: 1, y: 1},
-                    {x: 1, y: 0},
-                    {x: 1, y: -1},
-                    {x: 0, y: -1},
-                    {x: -1, y: -1},
-                    {x: -1, y: 0},
-                    {x: -1, y: 1}
-                ],
-                true
-            );
+        Queen.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(0, 1, true),
+                new Chess.Movement.Displacement(1, 1, true),
+                new Chess.Movement.Displacement(1, 0, true),
+                new Chess.Movement.Displacement(1, -1, true),
+                new Chess.Movement.Displacement(0, -1, true),
+                new Chess.Movement.Displacement(-1, -1, true),
+                new Chess.Movement.Displacement(-1, 0, true),
+                new Chess.Movement.Displacement(-1, 1, true)
+            ];
         };
 
         return Queen;
@@ -799,16 +796,14 @@ var Chess = (function(Chess) {
             return 'R';
         };
 
-        Rook.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 0, y: 1},
-                    {x: 1, y: 0},
-                    {x: 0, y: -1},
-                    {x: -1, y: 0}
-                ],
-                true
-            );
+        Rook.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(0, 1, true),
+                new Chess.Movement.Displacement(1, 0, true),
+                new Chess.Movement.Displacement(0, -1, true),
+                new Chess.Movement.Displacement(-1, 0, true)
+
+            ];
         };
 
         return Rook;

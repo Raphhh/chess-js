@@ -2,7 +2,7 @@ test("moveOnce", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var displacements = [
-        {x: 1, y: 2}
+        new Chess.Movement.Displacement(1, 2)
     ];
 
     var mover = new Chess.Movement.Mover(position, displacements);
@@ -17,9 +17,9 @@ test("moveOnce with change position", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var displacements = [
-        {x: 1, y: 2},
-        {x: 2, y: 3},
-        {x: 3, y: 4}
+        new Chess.Movement.Displacement(1, 2),
+        new Chess.Movement.Displacement(2, 3),
+        new Chess.Movement.Displacement(3, 4)
     ];
 
     var mover = new Chess.Movement.Mover(position, displacements);

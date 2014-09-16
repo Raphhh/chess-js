@@ -30,7 +30,7 @@ var Chess = (function(Chess) {
                 throw new Error('You must add the Piece to the board before trying to move it');
             }
 
-            var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementType().vectors),
+            var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
                 newPosition,
                 square,
                 result = [],
@@ -45,7 +45,7 @@ var Chess = (function(Chess) {
 
                 if(square && square.isValidForNewPiece(piece)) {
                     result.push(square);
-                    changeDirection = !piece.getDisplacementType().isExtensible || square.getPiece();
+                    changeDirection = !mover.getCurrentDisplacement().isExtensible() || square.getPiece();
                 } else {
                     changeDirection = true;
                 }

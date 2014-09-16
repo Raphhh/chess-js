@@ -6,18 +6,18 @@ var Chess = (function(Chess) {
     Chess.Movement.Mover = (function() {
 
         var moveXPosition = function() {
-            return this.__internal__.position.getX() + this.__internal__.displacements[this.__internal__.currentDirectionId].x;
+            return this.__internal__.position.getX() + this.getCurrentDisplacement().getX();
         };
 
         var moveYPosition = function() {
-            return this.__internal__.position.getY() + this.__internal__.displacements[this.__internal__.currentDirectionId].y;
+            return this.__internal__.position.getY() + this.getCurrentDisplacement().getY();
         };
 
-        function Mover(position, displacements) {
+        function Mover(position, displacementsSuite) {
             this.__internal__ = {
                 position: position,
                 initialPosition: position,
-                displacements: displacements,
+                displacementsSuite: displacementsSuite,
                 currentDirectionId: 0
             };
         }
@@ -25,7 +25,7 @@ var Chess = (function(Chess) {
         Mover.prototype.moveOnce = function(changeDirection) {
 
             if(changeDirection) {
-                if(++this.__internal__.currentDirectionId >= this.__internal__.displacements.length) {
+                if(++this.__internal__.currentDirectionId >= this.__internal__.displacementsSuite.length) {
                     return null;
                 }
                 this.__internal__.position = this.__internal__.initialPosition;
@@ -33,6 +33,13 @@ var Chess = (function(Chess) {
 
             this.__internal__.position = new Chess.Movement.Position(moveXPosition.call(this), moveYPosition.call(this));
             return this.__internal__.position;
+        };
+
+        Mover.prototype.getCurrentDisplacement = function() {
+            if(this.__internal__.displacementsSuite[this.__internal__.currentDirectionId]) {
+                return this.__internal__.displacementsSuite[this.__internal__.currentDirectionId];
+            }
+            return null;
         };
 
         return Mover;

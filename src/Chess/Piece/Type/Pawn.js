@@ -14,13 +14,15 @@ var Chess = (function(Chess) {
             return 'P';
         };
 
-        Pawn.prototype.getDisplacementType = function() {
-            return new Chess.Movement.DisplacementType(
-                [
-                    {x: 0, y: this.getColor().isWhite() ? 1 : -1}
-                ],
-                false
-            );
+        Pawn.prototype.getDisplacementsSuite = function() {
+            return [
+                new Chess.Movement.Displacement(
+                    0,
+                    this.getColor().isWhite() ? 1 : -1,
+                    false
+                )
+            ];
+
         };
 
         return Pawn;

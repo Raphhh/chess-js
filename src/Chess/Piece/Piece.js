@@ -32,8 +32,8 @@ var Chess = (function(Chess) {
             this.__internal__.square = null;
         };
 
-        Piece.prototype.getDisplacementType = function() {
-            return null;
+        Piece.prototype.getDisplacementsSuite = function() {
+            return [];
         };
 
         return Piece;
