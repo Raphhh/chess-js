@@ -268,7 +268,7 @@ var Chess = (function(Chess) {
                 throw new Error('Try an invalid move');
             }
             this.__internal__.board.changePiecePosition(piece, position);
-            piece.incrementDisplacementNumber();
+            piece.incrementDisplacementsNumber();
         };
 
         Coordinator.prototype.isEligibleMove = function(piece, position) {
@@ -547,7 +547,7 @@ var Chess = (function(Chess) {
             this.__internal__ = {
                 color: color,
                 square: null,
-                displacementNumber: 0
+                displacementsNumber: 0
             };
         }
 
@@ -575,8 +575,8 @@ var Chess = (function(Chess) {
             return [];
         };
 
-        Piece.prototype.incrementDisplacementNumber = function() {
-            this.__internal__.displacementNumber++; //todo bug: setter au début du jeu si les données sont celle d'un jeu en cours.
+        Piece.prototype.incrementDisplacementsNumber = function() {
+            this.__internal__.displacementsNumber++; //todo bug: setter au début du jeu si les données sont celle d'un jeu en cours.
         };
 
         return Piece;
@@ -748,13 +748,13 @@ var Chess = (function(Chess) {
 
         Pawn.prototype.getDisplacementsSuite = function() {
             var that = this;
-            var squareDisplacementNumber = 0;
+            var squareDisplacementsNumber = 0;
             return [
                 new Chess.Movement.Displacement(
                     0,
                     this.getColor().isWhite() ? 1 : -1,
                     function() {
-                        return !that.__internal__.displacementNumber && ++squareDisplacementNumber < 2;
+                        return !that.__internal__.displacementsNumber && ++squareDisplacementsNumber < 2;
                     },
                     function(square) {
                         return !square.getPiece();

@@ -18,7 +18,7 @@ test("getEligibleSquares for white pawn", function() {
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
     var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
-    piece.incrementDisplacementNumber();//it is not the first displacement
+    piece.incrementDisplacementsNumber();//it is not the first displacement
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -37,7 +37,7 @@ test("getEligibleSquares for black pawn", function() {
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
     var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
-    piece.incrementDisplacementNumber();//it is not the first displacement
+    piece.incrementDisplacementsNumber();//it is not the first displacement
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -117,7 +117,7 @@ test("getEligibleSquares with pawn taking in diagonal", function() {
 
     var factory = new Chess.Piece.PieceFactory();
     var pawn = factory.create('pawn', Chess.Piece.Color.WHITE);
-    pawn.incrementDisplacementNumber();//it is not the first displacement
+    pawn.incrementDisplacementsNumber();//it is not the first displacement
     var piece1 = factory.create('pawn', Chess.Piece.Color.BLACK);
     var piece2 = factory.create('pawn', Chess.Piece.Color.BLACK);
 

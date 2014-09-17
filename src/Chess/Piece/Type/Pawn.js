@@ -16,13 +16,13 @@ var Chess = (function(Chess) {
 
         Pawn.prototype.getDisplacementsSuite = function() {
             var that = this;
-            var squareDisplacementNumber = 0;
+            var squareDisplacementsNumber = 0;
             return [
                 new Chess.Movement.Displacement(
                     0,
                     this.getColor().isWhite() ? 1 : -1,
                     function() {
-                        return !that.__internal__.displacementNumber && ++squareDisplacementNumber < 2;
+                        return !that.__internal__.displacementsNumber && ++squareDisplacementsNumber < 2;
                     },
                     function(square) {
                         return !square.getPiece();
