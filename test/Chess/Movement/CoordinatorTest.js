@@ -17,7 +17,7 @@ test("getEligibleSquares for white pawn", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
     piece.incrementDisplacementsNumber();//it is not the first displacement
 
     var board = new Chess.Board.Board();
@@ -36,7 +36,7 @@ test("getEligibleSquares for black pawn", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
+    var piece = factory.create('pawn', Chess.Piece.Color.BLACK, 0);
     piece.incrementDisplacementsNumber();//it is not the first displacement
 
     var board = new Chess.Board.Board();
@@ -56,7 +56,7 @@ test("getEligibleSquares for white pawn first displacement", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -78,7 +78,7 @@ test("getEligibleSquares for black pawn first displacement", function() {
 
     var position = new Chess.Movement.Position(1, 6);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
+    var piece = factory.create('pawn', Chess.Piece.Color.BLACK, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -99,8 +99,8 @@ test("getEligibleSquares for black pawn first displacement", function() {
 test("getEligibleSquares with piece in front of pawn", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var pawn = factory.create('pawn', Chess.Piece.Color.WHITE);
-    var piece = factory.create('pawn', Chess.Piece.Color.BLACK);
+    var pawn = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
+    var piece = factory.create('pawn', Chess.Piece.Color.BLACK, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(pawn, new Chess.Movement.Position(1, 1));
@@ -116,10 +116,10 @@ test("getEligibleSquares with piece in front of pawn", function() {
 test("getEligibleSquares with pawn taking in diagonal", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var pawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var pawn = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
     pawn.incrementDisplacementsNumber();//it is not the first displacement
-    var piece1 = factory.create('pawn', Chess.Piece.Color.BLACK);
-    var piece2 = factory.create('pawn', Chess.Piece.Color.BLACK);
+    var piece1 = factory.create('pawn', Chess.Piece.Color.BLACK, 0);
+    var piece2 = factory.create('pawn', Chess.Piece.Color.BLACK, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(pawn, new Chess.Movement.Position(1, 1));
@@ -146,7 +146,7 @@ test("getEligibleSquares for rook", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -209,7 +209,7 @@ test("getEligibleSquares for bishop", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('bishop', Chess.Piece.Color.WHITE);
+    var piece = factory.create('bishop', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -257,7 +257,7 @@ test("getEligibleSquares for queen", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('queen', Chess.Piece.Color.WHITE);
+    var piece = factory.create('queen', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -350,7 +350,7 @@ test("getEligibleSquares for white knight", function() {
 
     var position = new Chess.Movement.Position(3, 3);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('knight', Chess.Piece.Color.WHITE);
+    var piece = factory.create('knight', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -391,7 +391,7 @@ test("getEligibleSquares for queen", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('king', Chess.Piece.Color.WHITE);
+    var piece = factory.create('king', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -439,7 +439,7 @@ test("isEligibleMove true", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -455,7 +455,7 @@ test("isEligibleMove false", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -471,7 +471,7 @@ test("moveTo error", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -492,7 +492,7 @@ test("moveTo ok", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
@@ -510,14 +510,14 @@ test("getEligibleSquares for a piece int front of the other color", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
     //we put a black pawn
     board.addPiece(
-        factory.create('pawn', Chess.Piece.Color.BLACK),
+        factory.create('pawn', Chess.Piece.Color.BLACK, 0),
         new Chess.Movement.Position(1, 3)
     );
 
@@ -546,14 +546,14 @@ test("getEligibleSquares for a piece int front of the same color", function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
 
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
     //we put a black pawn
     board.addPiece(
-        factory.create('pawn', Chess.Piece.Color.WHITE),
+        factory.create('pawn', Chess.Piece.Color.WHITE, 0),
         new Chess.Movement.Position(1, 3)
     );
 
@@ -580,7 +580,7 @@ test('isEnPassantCaptureOpen true', function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
@@ -593,7 +593,7 @@ test('isEnPassantCaptureOpen with other piece than a pawn', function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
@@ -606,7 +606,7 @@ test('isEnPassantCaptureOpen with just one square dsiaplecement', function() {
 
     var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 

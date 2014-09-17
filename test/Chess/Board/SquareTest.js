@@ -46,7 +46,7 @@ test("getPiece after removePiece", function() {
 test("isValidForNewPiece with empty square", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
 
     var square = new Chess.Board.Square({});
     strictEqual(square.isValidForNewPiece(piece), true);
@@ -56,10 +56,10 @@ test("isValidForNewPiece with empty square", function() {
 test("isValidForNewPiece with a piece of the other color", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
 
     var square = new Chess.Board.Square({});
-    square.setPiece(factory.create('rook', Chess.Piece.Color.BLACK));
+    square.setPiece(factory.create('rook', Chess.Piece.Color.BLACK, 0));
     strictEqual(square.isValidForNewPiece(piece), true);
 
 });
@@ -67,10 +67,10 @@ test("isValidForNewPiece with a piece of the other color", function() {
 test("isValidForNewPiece with a piece of the same color", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE);
+    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
 
     var square = new Chess.Board.Square({});
-    square.setPiece(factory.create('rook', Chess.Piece.Color.WHITE));
+    square.setPiece(factory.create('rook', Chess.Piece.Color.WHITE, 0));
     strictEqual(square.isValidForNewPiece(piece), false);
 
 });

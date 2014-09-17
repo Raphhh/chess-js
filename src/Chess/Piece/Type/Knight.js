@@ -6,8 +6,8 @@ var Chess = (function(Chess) {
 
     Chess.Piece.Type.Knight = (function() {
 
-        function Knight(color) {
-            this.__super__.constructor.call(this, color);
+        function Knight(color, displacementsNumber) {
+            this.__super__.constructor.call(this, color, displacementsNumber);
         }
 
         Knight.prototype.getName = function() {

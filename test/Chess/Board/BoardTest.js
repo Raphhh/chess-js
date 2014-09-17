@@ -33,7 +33,7 @@ test("changePiecePosition", function() {
 
     //set the current piece
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'white');
+    var piece = factory.create('pawn', 'white', 0);
     piece.setSquare(oldSquare);
     oldSquare.setPiece(piece);
 
@@ -41,7 +41,7 @@ test("changePiecePosition", function() {
     strictEqual(oldSquare.getPiece(), piece);
 
     //set the new square of the piece
-    var oldPiece = factory.create('pawn', 'black');
+    var oldPiece = factory.create('pawn', 'black', 0);
     newSquare.setPiece(oldPiece);
     oldPiece.setSquare(newSquare);
 
@@ -68,7 +68,7 @@ test("addPiece", function() {
     var square = board.getSquareByPosition(position);
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'white');
+    var piece = factory.create('pawn', 'white', 0);
 
     strictEqual(piece.getSquare(), null);
     strictEqual(square.getPiece(), null);
@@ -83,7 +83,7 @@ test("addPiece", function() {
 test("getPieces", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'white');
+    var piece = factory.create('pawn', 'white', 0);
 
     var board = new Chess.Board.Board();
     deepEqual(board.getPieces(), []);
@@ -97,7 +97,7 @@ test("getPieceByPosition", function() {
 
     var position = new Chess.Movement.Position(0, 0);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'white');
+    var piece = factory.create('pawn', 'white', 0);
 
     var board = new Chess.Board.Board();
     strictEqual(board.getPieceByPosition(position), null);

@@ -54,3 +54,28 @@ test("getDisplacementsSuite", function() {
 
     deepEqual(piece.getDisplacementsSuite(), []);
 });
+
+test("getDisplacementsNumber", function() {
+
+    var displacementNumber = 12;
+    var piece = new Chess.Piece.Piece(null, displacementNumber);
+
+    deepEqual(piece.getDisplacementsNumber(), displacementNumber);
+});
+
+
+test("getDisplacementsNumber with default value", function() {
+
+    var displacementNumber = 12;
+    var piece = new Chess.Piece.Piece(null);
+
+    deepEqual(piece.getDisplacementsNumber(), 0);
+});
+
+test("incrementDisplacementsNumber", function() {
+
+    var displacementNumber = 12;
+    var piece = new Chess.Piece.Piece(null, displacementNumber);
+    piece.incrementDisplacementsNumber();
+    deepEqual(piece.getDisplacementsNumber(), displacementNumber + 1);
+});

@@ -1,7 +1,7 @@
 test("inheritance of Piece", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'color');
+    var piece = factory.create('pawn', 'color', 0);
     ok(piece instanceof Chess.Piece.Piece);
     ok(piece instanceof Chess.Piece.Type.Pawn);
 
@@ -10,7 +10,7 @@ test("inheritance of Piece", function() {
 test("getColor (test if we call the parent constructor)", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'color');
+    var piece = factory.create('pawn', 'color', 0);
     strictEqual(piece.getColor().getValue(), 'color');
 
 });
@@ -18,7 +18,7 @@ test("getColor (test if we call the parent constructor)", function() {
 test("getName", function() {
 
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', 'color');
+    var piece = factory.create('pawn', 'color', 0);
     strictEqual(piece.getName(), 'P');
 
 });

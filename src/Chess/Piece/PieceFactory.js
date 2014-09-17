@@ -18,12 +18,12 @@ var Chess = (function(Chess) {
             Chess.Reflection.ClassReflection.extend(Chess.Piece.Type.King, Chess.Piece.Piece);
         }
 
-        PieceFactory.prototype.create = function(type, color) {
-            return new Chess.Piece.Type[capitalize(type)](new Chess.Piece.Color(color));
+        PieceFactory.prototype.create = function(type, color, displacementsNumber) {
+            return new Chess.Piece.Type[capitalize(type)](new Chess.Piece.Color(color), displacementsNumber);
         };
 
         PieceFactory.prototype.createByData = function(pieceData) {
-            return this.create(pieceData.type, pieceData.color);
+            return this.create(pieceData.type, pieceData.color, pieceData.displacementsNumber);
         };
 
         return PieceFactory;

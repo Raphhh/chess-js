@@ -5,11 +5,11 @@ var Chess = (function(Chess) {
 
     Chess.Piece.Piece = (function() {
 
-        function Piece(color) {
+        function Piece(color, displacementsNumber) {
             this.__internal__ = {
                 color: color,
                 square: null,
-                displacementsNumber: 0
+                displacementsNumber: displacementsNumber || 0
             };
         }
 
@@ -38,7 +38,11 @@ var Chess = (function(Chess) {
         };
 
         Piece.prototype.incrementDisplacementsNumber = function() {
-            this.__internal__.displacementsNumber++; //todo bug: setter au début du jeu si les données sont celle d'un jeu en cours.
+            this.__internal__.displacementsNumber++;
+        };
+
+        Piece.prototype.getDisplacementsNumber = function() {
+            return this.__internal__.displacementsNumber;
         };
 
         return Piece;

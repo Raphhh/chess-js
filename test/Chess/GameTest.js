@@ -7,7 +7,8 @@ var getInitData = function() {
                 "position": {
                     "x": 4,
                     "y": 7
-                }
+                },
+                "displacementsNumber": 1
             }
         ]
     };
@@ -21,6 +22,7 @@ test("getBoard", function() {
     strictEqual(game.getBoard().getPieces()[0].getColor().getValue(), 'black');
     strictEqual(game.getBoard().getPieces()[0].getSquare().getPosition().getX(), 4);
     strictEqual(game.getBoard().getPieces()[0].getSquare().getPosition().getY(), 7);
+    strictEqual(game.getBoard().getPieces()[0].getDisplacementsNumber(), 1);
 });
 
 test("getCoordinator", function() {
