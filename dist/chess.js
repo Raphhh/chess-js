@@ -322,9 +322,9 @@ var Chess = (function(Chess) {
             return this.__internal__.y;
         };
 
-        Displacement.prototype.isExtensible = function() {
+        Displacement.prototype.isExtensible = function(squareDisplacementsNumber) {
             if(this.__internal__.isExtensible instanceof Function) {
-                return this.__internal__.isExtensible();
+                return this.__internal__.isExtensible(squareDisplacementsNumber);
             }
             return this.__internal__.isExtensible;
         };
@@ -364,7 +364,8 @@ var Chess = (function(Chess) {
             var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
                 newPosition,
                 square,
-                result = [];
+                result = [],
+                i = 0;
 
             while((newPosition = mover.moveOnce()) !== null) {
                 try {
@@ -375,10 +376,12 @@ var Chess = (function(Chess) {
 
                 if(square && square.isValidForNewPiece(piece) && mover.getCurrentDisplacement().isValid(square)) {
                     result.push(square);
-                    if(!mover.getCurrentDisplacement().isExtensible() || square.getPiece()) {
+                    if(!mover.getCurrentDisplacement().isExtensible(++i) || square.getPiece()) {
+                        i = 0;
                         mover.changeDirection();
                     }
                 } else {
+                    i = 0;
                     mover.changeDirection();
                 }
 
@@ -894,13 +897,12 @@ var Chess = (function(Chess) {
 
         Pawn.prototype.getDisplacementsSuite = function() {
             var that = this;
-            var squareDisplacementsNumber = 0;
             return [
                 new Chess.Movement.Displacement(
                     0,
                     this.getColor().getDirection(),
-                    function() {
-                        return !that.__internal__.displacementsNumber && ++squareDisplacementsNumber < 2;
+                    function(squareDisplacementsNumber) {
+                        return !that.__internal__.displacementsNumber && squareDisplacementsNumber < 2;
                     },
                     function(square) {
                         return !square.getPiece();
@@ -993,7 +995,6 @@ var Chess = (function(Chess) {
                 new Chess.Movement.Displacement(1, 0, true),
                 new Chess.Movement.Displacement(0, -1, true),
                 new Chess.Movement.Displacement(-1, 0, true)
-
             ];
         };
 

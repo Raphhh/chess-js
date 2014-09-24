@@ -20,7 +20,8 @@ var Chess = (function(Chess) {
             var mover = new Chess.Movement.Mover(piece.getSquare().getPosition(), piece.getDisplacementsSuite()),
                 newPosition,
                 square,
-                result = [];
+                result = [],
+                i = 0;
 
             while((newPosition = mover.moveOnce()) !== null) {
                 try {
@@ -31,10 +32,12 @@ var Chess = (function(Chess) {
 
                 if(square && square.isValidForNewPiece(piece) && mover.getCurrentDisplacement().isValid(square)) {
                     result.push(square);
-                    if(!mover.getCurrentDisplacement().isExtensible() || square.getPiece()) {
+                    if(!mover.getCurrentDisplacement().isExtensible(++i) || square.getPiece()) {
+                        i = 0;
                         mover.changeDirection();
                     }
                 } else {
+                    i = 0;
                     mover.changeDirection();
                 }
 

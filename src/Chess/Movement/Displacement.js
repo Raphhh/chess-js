@@ -24,9 +24,9 @@ var Chess = (function(Chess) {
             return this.__internal__.y;
         };
 
-        Displacement.prototype.isExtensible = function() {
+        Displacement.prototype.isExtensible = function(squareDisplacementsNumber) {
             if(this.__internal__.isExtensible instanceof Function) {
-                return this.__internal__.isExtensible();
+                return this.__internal__.isExtensible(squareDisplacementsNumber);
             }
             return this.__internal__.isExtensible;
         };
