@@ -575,42 +575,159 @@ test("getEligibleSquares for a piece int front of the same color", function() {
 
 });
 
+test("getEligibleSquares with capture en passant of a white pawn", function() {
 
-test('isEnPassantCaptureOpen true', function() {
-
-    var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
+    var whitePawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+
     var board = new Chess.Board.Board();
-    board.addPiece(piece, position);
+    board.addPiece(whitePawn, new Chess.Movement.Position(1, 1));
+    board.addPiece(blackPawn, new Chess.Movement.Position(2, 3));
+
+    blackPawn.incrementDisplacementsNumber();
 
     var coordinator = new Chess.Movement.Coordinator(board);
+    coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
 
-    strictEqual(coordinator.isEnPassantCaptureOpen(piece, new Chess.Movement.Position(1, 3)), true);
+    var result = coordinator.getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+    strictEqual(result[1].getPosition().getX(), 1);
+    strictEqual(result[1].getPosition().getY(), 2);
+
 });
 
-test('isEnPassantCaptureOpen with other piece than a pawn', function() {
+test("getEligibleSquares with capture en passant of a black pawn", function() {
 
-    var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('rook', Chess.Piece.Color.WHITE, 0);
+    var whitePawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+
     var board = new Chess.Board.Board();
-    board.addPiece(piece, position);
+    board.addPiece(whitePawn, new Chess.Movement.Position(1, 4));
+    board.addPiece(blackPawn, new Chess.Movement.Position(2, 6));
+
+    whitePawn.incrementDisplacementsNumber();
 
     var coordinator = new Chess.Movement.Coordinator(board);
+    coordinator.moveTo(blackPawn, new Chess.Movement.Position(2, 4));
 
-    strictEqual(coordinator.isEnPassantCaptureOpen(piece, new Chess.Movement.Position(1, 3)), false);
+    var result = coordinator.getEligibleSquares(whitePawn);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 1);
+    strictEqual(result[0].getPosition().getY(), 5);
+
+    strictEqual(result[1].getPosition().getX(), 2);
+    strictEqual(result[1].getPosition().getY(), 5);
+
 });
 
-test('isEnPassantCaptureOpen with just one square dsiaplecement', function() {
+test("getEligibleSquares with capture en passant of a white pawn with a displacement of 1 square only in first displacement", function() {
 
-    var position = new Chess.Movement.Position(1, 1);
     var factory = new Chess.Piece.PieceFactory();
-    var piece = factory.create('pawn', Chess.Piece.Color.WHITE, 0);
+    var whitePawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+
     var board = new Chess.Board.Board();
-    board.addPiece(piece, position);
+    board.addPiece(whitePawn, new Chess.Movement.Position(1, 1));
+    board.addPiece(blackPawn, new Chess.Movement.Position(2, 3));
+
+    blackPawn.incrementDisplacementsNumber();
 
     var coordinator = new Chess.Movement.Coordinator(board);
+    coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 2));
 
-    strictEqual(coordinator.isEnPassantCaptureOpen(piece, new Chess.Movement.Position(1, 2)), false);
+    var result = coordinator.getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+    strictEqual(result[1].getPosition().getX(), 1);
+    strictEqual(result[1].getPosition().getY(), 2);
+
+});
+
+test("getEligibleSquares with capture en passant of a white pawn with a displacement of 1 square only in second displacement", function() {
+
+    var factory = new Chess.Piece.PieceFactory();
+    var whitePawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(whitePawn, new Chess.Movement.Position(1, 2));
+    board.addPiece(blackPawn, new Chess.Movement.Position(2, 3));
+
+    whitePawn.incrementDisplacementsNumber();
+    blackPawn.incrementDisplacementsNumber();
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
+
+    var result = coordinator.getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 1);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+});
+
+test("getEligibleSquares with capture en passant of a white piece but not a pawn", function() {
+
+    var factory = new Chess.Piece.PieceFactory();
+    var whitePawn = factory.create('rook', Chess.Piece.Color.WHITE);
+    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(whitePawn, new Chess.Movement.Position(1, 1));
+    board.addPiece(blackPawn, new Chess.Movement.Position(2, 3));
+
+    blackPawn.incrementDisplacementsNumber();
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
+
+    var result = coordinator.getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 1);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+});
+
+test("getEligibleSquares with capture en passant of a white pawn not open", function() {
+
+    var factory = new Chess.Piece.PieceFactory();
+    var whitePawn = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var whitePawn2 = factory.create('pawn', Chess.Piece.Color.WHITE);
+    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+
+    var board = new Chess.Board.Board();
+    board.addPiece(whitePawn, new Chess.Movement.Position(1, 1));
+    board.addPiece(whitePawn2, new Chess.Movement.Position(0, 1));
+    board.addPiece(blackPawn, new Chess.Movement.Position(2, 3));
+
+    blackPawn.incrementDisplacementsNumber();
+
+    var coordinator = new Chess.Movement.Coordinator(board);
+    coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
+    coordinator.moveTo(whitePawn2, new Chess.Movement.Position(0, 3)); //we move an other piece before trying make an en passant capture
+
+    var result = coordinator.getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 1);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+
 });

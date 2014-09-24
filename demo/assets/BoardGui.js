@@ -26,9 +26,12 @@ var BoardGui = (function($) {
     };
 
     BoardGui.prototype.initPieces = function() {
+        this.$squares.html('');
         var pieces = this.game.getBoard().getPieces();
         for(var i = 0, len = pieces.length; i < len; ++i) {
-            jQuery('#square-' + pieces[i].getSquare().getPosition().toAlgebraicNotation(), this.$board).append(pieces[i].getName() + '-' + pieces[i].getColor().getValue().charAt(0));
+            if(pieces[i].getSquare()) {
+                jQuery('#square-' + pieces[i].getSquare().getPosition().toAlgebraicNotation(), this.$board).html(pieces[i].getName() + '-' + pieces[i].getColor().getValue().charAt(0));
+            }
         }
     };
 
@@ -71,8 +74,7 @@ var BoardGui = (function($) {
     BoardGui.prototype.movePiece = function($originSquare, $destinationSquare) {
         try {
             this.interfacer.move($originSquare.data('position'), $destinationSquare.data('position'));
-            $destinationSquare.html($originSquare.html());
-            $originSquare.html('');
+            this.initPieces();
             this.$selectedSquare = null;
         } catch(e) {
             alert(e.message);

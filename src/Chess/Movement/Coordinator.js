@@ -8,7 +8,11 @@ var Chess = (function(Chess) {
         function Coordinator(board) {
             this.__internal__ = {
                 board: board,
-                calculator: new Chess.Movement.DisplacementsCalculator(board)
+                calculator: new Chess.Movement.DisplacementsCalculator(board),
+                enPassantContext: new Chess.Movement.EnPassantContext(
+                    new Chess.Movement.EnPassantCoordinator(board),
+                    new Chess.Movement.PawnDisplacementAnalyser()
+                )
             };
         }
 
@@ -16,6 +20,7 @@ var Chess = (function(Chess) {
             if(!this.isEligibleMove(piece, position)) {
                 throw new Error('Try an invalid move');
             }
+            this.__internal__.enPassantContext.synchronizeContextBeforeDisplacement(piece, position);
             this.__internal__.board.changePiecePosition(piece, position);
             piece.incrementDisplacementsNumber();
         };
@@ -25,15 +30,11 @@ var Chess = (function(Chess) {
             return this.getEligibleSquares(piece).indexOf(square) >= 0;
         };
 
-        Coordinator.prototype.isEnPassantCaptureOpen = function(piece, position) {
-            if(piece instanceof Chess.Piece.Type.Pawn) {
-                return piece.getSquare().getPosition().getY() === position.getY() - 2;
-            }
-            return false;
-        };
-
         Coordinator.prototype.getEligibleSquares = function(piece) {
-            return this.__internal__.calculator.getEligibleSquares(piece);
+            this.__internal__.enPassantContext.setEnPassantContext(piece);
+            var result = this.__internal__.calculator.getEligibleSquares(piece);
+            this.__internal__.enPassantContext.restoreInitialContext();
+            return result;
         };
 
         return Coordinator;
