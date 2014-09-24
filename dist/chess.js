@@ -259,7 +259,11 @@ var Chess = (function(Chess) {
         function Coordinator(board) {
             this.__internal__ = {
                 board: board,
-                calculator: new Chess.Movement.DisplacementsCalculator(board)
+                calculator: new Chess.Movement.DisplacementsCalculator(board),
+                enPassantContext: new Chess.Movement.EnPassantContext(
+                    new Chess.Movement.EnPassantCoordinator(board),
+                    new Chess.Movement.PawnDisplacementAnalyser()
+                )
             };
         }
 
@@ -267,6 +271,7 @@ var Chess = (function(Chess) {
             if(!this.isEligibleMove(piece, position)) {
                 throw new Error('Try an invalid move');
             }
+            this.__internal__.enPassantContext.synchronizeContextBeforeDisplacement(piece, position);
             this.__internal__.board.changePiecePosition(piece, position);
             piece.incrementDisplacementNumber();
         };
@@ -276,15 +281,11 @@ var Chess = (function(Chess) {
             return this.getEligibleSquares(piece).indexOf(square) >= 0;
         };
 
-        Coordinator.prototype.isEnPassantCaptureOpen = function(piece, position) {
-            if(piece instanceof Chess.Piece.Type.Pawn) {
-                return piece.getSquare().getPosition().getY() === position.getY() - 2;
-            }
-            return false;
-        };
-
         Coordinator.prototype.getEligibleSquares = function(piece) {
-            return this.__internal__.calculator.getEligibleSquares(piece);
+            this.__internal__.enPassantContext.setEnPassantContext(piece);
+            var result = this.__internal__.calculator.getEligibleSquares(piece);
+            this.__internal__.enPassantContext.restoreInitialContext();
+            return result;
         };
 
         return Coordinator;
@@ -420,6 +421,108 @@ var Chess = (function(Chess) {
 
     Chess.Movement = Chess.Movement || {};
 
+    Chess.Movement.EnPassantContext = (function() {
+
+        function EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser) {
+            this.__internal__ = {
+                enPassantCoordinator: enPassantCoordinator,
+                pawnDisplacementAnalyser: pawnDisplacementAnalyser
+            };
+        }
+
+        EnPassantContext.prototype.synchronizeContextBeforeDisplacement = function(piece, position) {
+            if(this.__internal__.pawnDisplacementAnalyser.isPawnCaptureDisplacement(piece, position)) {
+                this.__internal__.enPassantCoordinator.setEnPassantBoard();
+            }
+
+            //todo séparer la méthode fait 2 choses?
+            this.__internal__.enPassantCoordinator.resetEnPassantEligiblePawn();
+            if(this.__internal__.pawnDisplacementAnalyser.isPawnDoubleSquareDisplacement(piece, position)) {
+                this.__internal__.enPassantCoordinator.setEnPassantEligiblePawn(piece, position);
+            }
+        };
+
+        EnPassantContext.prototype.setEnPassantContext = function(piece) {
+            if(piece instanceof Chess.Piece.Type.Pawn) {
+                this.__internal__.enPassantCoordinator.setEnPassantBoard();
+            }
+        };
+
+        EnPassantContext.prototype.restoreInitialContext = function() {
+            this.__internal__.enPassantCoordinator.restoreInitialBoard();
+        };
+
+        return EnPassantContext;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Movement = Chess.Movement || {};
+
+    Chess.Movement.EnPassantCoordinator = (function() {
+
+        function EnPassantCoordinator(board) {
+            this.__internal__ = {
+                board: board,
+                enPassantEligiblePawn: null,
+                pawnPosition: null
+            };
+        }
+
+        EnPassantCoordinator.prototype.resetEnPassantEligiblePawn = function() {
+            this.__internal__.enPassantEligiblePawn = null;
+            this.__internal__.pawnPosition = null;
+        };
+
+        EnPassantCoordinator.prototype.setEnPassantEligiblePawn = function(piece, position) {
+            this.__internal__.enPassantEligiblePawn = piece;
+            this.__internal__.pawnPosition = position;
+        };
+
+        EnPassantCoordinator.prototype.setEnPassantBoard = function() {
+            if(this.__internal__.enPassantEligiblePawn && this.__internal__.pawnPosition) {
+                this.__internal__.board.changePiecePosition(
+                    this.__internal__.enPassantEligiblePawn,
+                    new Chess.Movement.Position(
+                        this.__internal__.pawnPosition.getX(),
+                        this.__internal__.pawnPosition.getY() - this.__internal__.enPassantEligiblePawn.getColor().getDirection()
+                    )
+                );
+            }
+        };
+
+        EnPassantCoordinator.prototype.restoreInitialBoard = function() {
+            if(this.__internal__.enPassantEligiblePawn && this.__internal__.pawnPosition) {
+                try {
+                    this.__internal__.board.changePiecePosition(
+                        this.__internal__.enPassantEligiblePawn,
+                        this.__internal__.pawnPosition
+                    );
+                } catch(e) {
+                    //todo le pawn était déjà à sa place
+                }
+            }
+        };
+
+        return EnPassantCoordinator;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Movement = Chess.Movement || {};
+
     Chess.Movement.Mover = (function() {
 
         var moveXPosition = function() {
@@ -460,6 +563,45 @@ var Chess = (function(Chess) {
         };
 
         return Mover;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Movement = Chess.Movement || {};
+
+    Chess.Movement.PawnDisplacementAnalyser = (function() {
+
+        function PawnDisplacementAnalyser() {
+
+        }
+
+        PawnDisplacementAnalyser.prototype.isPawnDoubleSquareDisplacement = function(piece, position) {
+            if(!piece.getSquare()) {
+                throw new Error('Piece has currently no square');
+            }
+            if(piece instanceof Chess.Piece.Type.Pawn) {
+                return Math.abs(piece.getSquare().getPosition().getY() - position.getY()) === 2;
+            }
+            return false;
+        };
+
+        PawnDisplacementAnalyser.prototype.isPawnCaptureDisplacement = function(piece, position) {
+            if(!piece.getSquare()) {
+                throw new Error('Piece has currently no square');
+            }
+            if(piece instanceof Chess.Piece.Type.Pawn) {
+                return Math.abs(piece.getSquare().getPosition().getX() - position.getX()) === 1;
+            }
+            return false;
+        };
+
+        return PawnDisplacementAnalyser;
 
     })();
 
@@ -911,6 +1053,136 @@ var Chess = (function(Chess) {
             return new F();
         }
     };
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.EligibleSquare = (function() {
+
+        function EligibleSquare(square) {
+            this.__internal__ = {
+                square: square
+            };
+        }
+
+        EligibleSquare.prototype.getValue = function() {
+            if(this.__internal__.getPiece()) {
+                return this.__internal__.getPiece().getValue();
+            }
+            return 0;
+        };
+
+        EligibleSquare.prototype.isBetterThan = function(eligibleSquare) {
+            if(!eligibleSquare) {
+                return true;
+            }
+            return this.getValue() > eligibleSquare.getValue();
+        };
+
+        return EligibleSquare;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.GameState = (function() {
+
+        function GameState(game) {
+            this.__internal__ = {
+                game: game
+            };
+        }
+
+        GameState.prototype.getMovablePieces = function() {
+            var result = [];
+            var pieces = this.__internal__.game.getBoard().getPieces();
+            for(var i = 0, len = pieces.length; i < len; ++i) {
+                var squares = this.__internal__.game.getCoordinator().getEligibleSquares(pieces[i]);
+                if(squares.length) {
+                    result.push(new Chess.Simulator.MovablePiece(pieces[i], squares));
+                }
+            }
+            return result;
+        };
+
+        GameState.prototype.getBestMovablePiece = function() {
+            var result = null;
+            var pieces = this.getMovablePieces();
+            for(var i = 0, len = pieces.length; i < len; ++i) {
+                if(pieces[i].isBetterThan(result)) { //pour l'instant, on prend d'office la premi?re. il faudrait un petit random.
+                    result = pieces[i];
+                }
+            }
+            return result;
+        };
+
+        return GameState;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.MovablePiece = (function() {
+
+        function MovablePiece(piece, eligibleSquares) {
+            this.__internal__ = {
+                piece: piece,
+                eligibleSquares: eligibleSquares
+            };
+        }
+
+        MovablePiece.prototype.getEligibleSquares = function() {
+            var result = [];
+            var squares = this.__internal__.eligibleSquares;
+            for(var i = 0, len = squares.length; i < len; ++i) {
+                result.push(new Chess.Simulator.EligibleSquare(squares[i]));
+            }
+            return result;
+        };
+
+        MovablePiece.prototype.getBestEligibleSquare = function() {
+            var result = null;
+            var squares = this.getEligibleSquares();
+            for(var i = 0, len = squares.length; i < len; ++i) {
+                if(squares[i].isBetterThan(result)) { //pour l'instant, on prend d'office la premi?re. il faudrait un petit random.
+                    result = squares[i];
+                }
+            }
+            return result;
+        };
+
+        MovablePiece.prototype.isBetterThan = function(movablePiece) {
+            if(!movablePiece) {
+                return true;
+            }
+            return this.getBestEligibleSquare().getValue() > movablePiece.getBestEligibleSquare().getValue();
+        };
+
+        return MovablePiece;
+
+    })();
 
     return Chess;
 
