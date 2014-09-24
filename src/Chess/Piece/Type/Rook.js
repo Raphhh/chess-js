@@ -20,7 +20,6 @@ var Chess = (function(Chess) {
                 new Chess.Movement.Displacement(1, 0, true),
                 new Chess.Movement.Displacement(0, -1, true),
                 new Chess.Movement.Displacement(-1, 0, true)
-
             ];
         };
 
