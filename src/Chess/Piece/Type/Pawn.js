@@ -20,7 +20,7 @@ var Chess = (function(Chess) {
             return [
                 new Chess.Movement.Displacement(
                     0,
-                    this.getColor().isWhite() ? 1 : -1,
+                    this.getColor().getDirection(),
                     function() {
                         return !that.__internal__.displacementsNumber && ++squareDisplacementsNumber < 2;
                     },
@@ -30,7 +30,7 @@ var Chess = (function(Chess) {
                 ),
                 new Chess.Movement.Displacement(
                     -1,
-                    this.getColor().isWhite() ? 1 : -1,
+                    this.getColor().getDirection(),
                     false,
                     function(square) {
                         return Boolean(square.getPiece());
@@ -38,7 +38,7 @@ var Chess = (function(Chess) {
                 ),
                 new Chess.Movement.Displacement(
                     1,
-                    this.getColor().isWhite() ? 1 : -1,
+                    this.getColor().getDirection(),
                     false,
                     function(square) {
                         return Boolean(square.getPiece());

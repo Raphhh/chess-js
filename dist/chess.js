@@ -898,7 +898,7 @@ var Chess = (function(Chess) {
             return [
                 new Chess.Movement.Displacement(
                     0,
-                    this.getColor().isWhite() ? 1 : -1,
+                    this.getColor().getDirection(),
                     function() {
                         return !that.__internal__.displacementsNumber && ++squareDisplacementsNumber < 2;
                     },
@@ -908,7 +908,7 @@ var Chess = (function(Chess) {
                 ),
                 new Chess.Movement.Displacement(
                     -1,
-                    this.getColor().isWhite() ? 1 : -1,
+                    this.getColor().getDirection(),
                     false,
                     function(square) {
                         return Boolean(square.getPiece());
@@ -916,7 +916,7 @@ var Chess = (function(Chess) {
                 ),
                 new Chess.Movement.Displacement(
                     1,
-                    this.getColor().isWhite() ? 1 : -1,
+                    this.getColor().getDirection(),
                     false,
                     function(square) {
                         return Boolean(square.getPiece());
@@ -1038,135 +1038,5 @@ var Chess = (function(Chess) {
     };
 
     return Chess;
-
-})(Chess || {});
-
-var Chess = (function(Chess) {
-	'use strict';
-
-	Chess.Simulator = Chess.Simulator || {};
-
-	Chess.Simulator.EligibleSquare = (function() {
-
-		function EligibleSquare(square) {
-			this.__internal__ = {
-				square: square
-			};
-		}
-
-		EligibleSquare.prototype.getValue = function() {
-			if(this.__internal__.getPiece()){
-				return this.__internal__.getPiece().getValue();
-			}
-			return 0;
-		};
-
-		EligibleSquare.prototype.isBetterThan = function(eligibleSquare) {
-			if(!eligibleSquare){
-				return true;
-			}
-			return this.getValue() > eligibleSquare.getValue();
-		};
-
-		return EligibleSquare;
-
-	})();
-
-	return Chess;
-
-})(Chess || {});
-
-
-var Chess = (function(Chess) {
-	'use strict';
-
-	Chess.Simulator = Chess.Simulator || {};
-
-	Chess.Simulator.GameState = (function() {
-
-		function GameState(game) {
-			this.__internal__ = {
-				game: game
-			};
-		}
-
-		GameState.prototype.getMovablePieces = function() {
-			var result = [];
-			var pieces = this.__internal__.game.getBoard().getPieces();
-			for(var i= 0, len = pieces.length; i<len; ++i){
-				var squares = this.__internal__.game.getCoordinator().getEligibleSquares(pieces[i]);
-				if(squares.length){
-					result.push(new Chess.Simulator.MovablePiece(pieces[i], squares));
-				}
-			}
-			return result;
-		};
-
-		GameState.prototype.getBestMovablePiece = function() {
-			var result = null;
-			var pieces = this.getMovablePieces();
-			for(var i= 0, len = pieces.length; i<len; ++i){
-				if(pieces[i].isBetterThan(result)){ //pour l'instant, on prend d'office la premi?re. il faudrait un petit random.
-					result = pieces[i];
-				}
-			}
-			return result;
-		};
-
-		return GameState;
-
-	})();
-
-	return Chess;
-
-})(Chess || {});
-
-
-var Chess = (function(Chess) {
-	'use strict';
-
-	Chess.Simulator = Chess.Simulator || {};
-
-	Chess.Simulator.MovablePiece = (function() {
-
-		function MovablePiece(piece, eligibleSquares) {
-			this.__internal__ = {
-				piece: piece,
-				eligibleSquares: eligibleSquares
-			};
-		}
-
-		MovablePiece.prototype.getEligibleSquares = function() {
-			var result = [];
-			var squares = this.__internal__.eligibleSquares;
-			for(var i= 0, len = squares.length; i<len; ++i){
-				result.push(new Chess.Simulator.EligibleSquare(squares[i]));
-			}
-			return result;
-		};
-
-		MovablePiece.prototype.getBestEligibleSquare = function() {
-			var result = null;
-			var squares = this.getEligibleSquares();
-			for(var i= 0, len = squares.length; i<len; ++i){
-				if(squares[i].isBetterThan(result)){ //pour l'instant, on prend d'office la premi?re. il faudrait un petit random.
-					result = squares[i];
-				}
-			}
-			return result;
-		};
-
-		MovablePiece.prototype.isBetterThan = function(movablePiece) {
-			if(!movablePiece){
-				return true;
-			}
-			return this.getBestEligibleSquare().getValue() > movablePiece.getBestEligibleSquare().getValue();
-		};
-
-		return MovablePiece;
-
-	})();
-
-	return Chess;
 
 })(Chess || {});
