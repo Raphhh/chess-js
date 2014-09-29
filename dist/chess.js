@@ -289,9 +289,9 @@ var Chess = (function(Chess) {
         };
 
         Coordinator.prototype.getEligibleSquares = function(piece) {
-//            if(!this.__internal__.colorSwitcher.isPlayingColor(piece.getColor())){
-//                return [];
-//            }
+            if(!this.__internal__.colorSwitcher.isPlayingColor(piece.getColor())) {
+                return [];
+            }
 
             this.__internal__.enPassantContext.setEnPassantContext(piece);
             var result = this.__internal__.calculator.getEligibleSquares(piece);
