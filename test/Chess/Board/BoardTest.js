@@ -130,3 +130,27 @@ test("initPieces", function() {
     strictEqual(piece.getColor().getValue(), 'black');
     deepEqual(piece.getSquare().getPosition(), position);
 });
+
+
+test("initPieces without position", function() {
+
+    var position = new Chess.Movement.Position(0, 0);
+
+    var board = new Chess.Board.Board();
+    deepEqual(board.getPieceByPosition(position), null);
+
+    board.initPieces([
+        {
+            "type": "pawn",
+            "color": "black"
+        }
+    ]);
+
+
+    var pieces = board.getPieces();
+    strictEqual(pieces.length, 1);
+    var piece = pieces[0];
+    ok(piece instanceof Chess.Piece.Type.Pawn);
+    strictEqual(piece.getColor().getValue(), 'black');
+    deepEqual(piece.getSquare(), null);
+});

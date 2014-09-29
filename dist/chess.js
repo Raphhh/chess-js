@@ -55,10 +55,15 @@ var Chess = (function(Chess) {
         Board.prototype.initPieces = function(piecesData) {
             var factory = new Chess.Piece.PieceFactory();
             for(var i = 0, len = piecesData.length; i < len; ++i) {
-                this.addPiece(
-                    factory.createByData(piecesData[i]),
-                    new Chess.Movement.Position(piecesData[i].position.x, piecesData[i].position.y)
-                );
+                var piece = factory.createByData(piecesData[i]);
+                if(piecesData[i].position && piecesData[i]) {
+                    this.addPiece(
+                        piece,
+                        new Chess.Movement.Position(piecesData[i].position.x, piecesData[i].position.y)
+                    );
+                } else {
+                    this.__internal__.pieces.push(piece);
+                }
             }
         };
 
