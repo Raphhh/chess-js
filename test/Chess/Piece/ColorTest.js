@@ -1,7 +1,17 @@
+test("construct with not valid color", function() {
+    throws(
+        function() {
+            new Chess.Piece.Color('pink');
+        },
+        Error,
+        'Color value must be Color.BLACK or Color.WHITE'
+    );
+});
+
 test("getValue", function() {
 
-    var value1 = 'a';
-    var value2 = 'b';
+    var value1 = Chess.Piece.Color.WHITE;
+    var value2 = Chess.Piece.Color.BLACK;
 
     var color1 = new Chess.Piece.Color(value1);
     var color2 = new Chess.Piece.Color(value2);

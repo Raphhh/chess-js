@@ -6,6 +6,10 @@ var Chess = (function(Chess) {
     Chess.Piece.Color = (function() {
 
         function Color(value) {
+            if(value !== Color.BLACK && value !== Color.WHITE) {
+                throw new Error('Color value must be Color.BLACK or Color.WHITE');
+            }
+
             this.__internal__ = {
                 value: value
             };
