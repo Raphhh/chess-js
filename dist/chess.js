@@ -53,22 +53,24 @@ var Chess = (function(Chess) {
         };
 
         Board.prototype.initPieces = function(piecesData) {
-            var factory = new Chess.Piece.PieceFactory();
+            var pieceFactory = new Chess.Piece.PieceFactory();
+            var positionFactory = new Chess.Movement.PositionFactory();
             for(var i = 0, len = piecesData.length; i < len; ++i) {
-                var piece = factory.createByData(piecesData[i]);
-                if(piecesData[i].position && piecesData[i]) {
+                if(piecesData[i].position) {
                     this.addPiece(
-                        piece,
-                        new Chess.Movement.Position(piecesData[i].position.x, piecesData[i].position.y)
+                        pieceFactory.createByData(piecesData[i]),
+                        positionFactory.createByData(piecesData[i].position)
                     );
                 } else {
-                    this.__internal__.pieces.push(piece);
+                    this.addPiece(pieceFactory.createByData(piecesData[i]));
                 }
             }
         };
 
         Board.prototype.addPiece = function(piece, position) {
-            this.changePiecePosition(piece, position);
+            if(position) {
+                this.changePiecePosition(piece, position);
+            }
             this.__internal__.pieces.push(piece);
         };
 
@@ -645,6 +647,30 @@ var Chess = (function(Chess) {
         };
 
         return Position;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Movement = Chess.Movement || {};
+
+    Chess.Movement.PositionFactory = (function() {
+
+        function PositionFactory() {
+
+        }
+
+        PositionFactory.prototype.createByData = function(positionData) {
+            return new Chess.Movement.Position(positionData.x, positionData.y);
+        };
+
+        return PositionFactory;
 
     })();
 

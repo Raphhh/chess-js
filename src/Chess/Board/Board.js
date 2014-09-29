@@ -41,16 +41,16 @@ var Chess = (function(Chess) {
         };
 
         Board.prototype.initPieces = function(piecesData) {
-            var factory = new Chess.Piece.PieceFactory();
+            var pieceFactory = new Chess.Piece.PieceFactory();
+            var positionFactory = new Chess.Movement.PositionFactory();
             for(var i = 0, len = piecesData.length; i < len; ++i) {
-                var piece = factory.createByData(piecesData[i]);
-                if(piecesData[i].position && piecesData[i]) {
+                if(piecesData[i].position) {
                     this.addPiece(
-                        piece,
-                        new Chess.Movement.Position(piecesData[i].position.x, piecesData[i].position.y)
+                        pieceFactory.createByData(piecesData[i]),
+                        positionFactory.createByData(piecesData[i].position)
                     );
                 } else {
-                    this.addPiece(piece);
+                    this.addPiece(pieceFactory.createByData(piecesData[i]));
                 }
             }
         };
