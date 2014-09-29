@@ -4,12 +4,13 @@ var Chess = (function(Chess) {
     Chess.Game = (function() {
 
         function Game(data) {
+            var playingColor = new Chess.Piece.Color(data.playingColor || Chess.Piece.Color.WHITE);
             var board = new Chess.Board.Board();
-            board.initPieces(data.pieces);
+            board.initPieces(data.pieces || []);
 
             this.__internal__ = {
                 board: board,
-                coordinator: new Chess.Movement.Coordinator(board)
+                coordinator: new Chess.Movement.Coordinator(board, playingColor)
             };
         }
 

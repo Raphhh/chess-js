@@ -1,5 +1,6 @@
 var getInitData = function() {
     return {
+        playingColor: 'black',
         pieces: [
             {
                 "type": "king",
@@ -29,5 +30,6 @@ test("getCoordinator", function() {
 
     var game = new Chess.Game(getInitData());
     strictEqual(game.getCoordinator().__internal__.board, game.getBoard());
+    strictEqual(game.getCoordinator().getPlayingColor().getValue(), Chess.Piece.Color.BLACK);
 
 });
