@@ -5,9 +5,10 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Coordinator = (function() {
 
-        function Coordinator(board) {
+        function Coordinator(board, playingColor) {
             this.__internal__ = {
                 board: board,
+                colorSwitcher: new Chess.Piece.ColorSwitcher(playingColor),
                 calculator: new Chess.Movement.DisplacementsCalculator(board),
                 enPassantContext: new Chess.Movement.EnPassantContext(
                     new Chess.Movement.EnPassantCoordinator(board),
@@ -16,6 +17,10 @@ var Chess = (function(Chess) {
             };
         }
 
+        Coordinator.prototype.getPlayingColor = function() {
+            return this.__internal__.colorSwitcher.getPlayingColor();
+        };
+
         Coordinator.prototype.moveTo = function(piece, position) {
             if(!this.isEligibleMove(piece, position)) {
                 throw new Error('Try an invalid move');
@@ -23,6 +28,7 @@ var Chess = (function(Chess) {
             this.__internal__.enPassantContext.synchronizeContextBeforeDisplacement(piece, position);
             this.__internal__.board.changePiecePosition(piece, position);
             piece.incrementDisplacementsNumber();
+            this.__internal__.colorSwitcher.switchColor();
         };
 
         Coordinator.prototype.isEligibleMove = function(piece, position) {
