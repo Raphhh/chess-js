@@ -698,6 +698,10 @@ var Chess = (function(Chess) {
             };
         }
 
+        ColorSwitcher.prototype.getPlayingColor = function() {
+            return this.__internal__.playingColor;
+        };
+
         ColorSwitcher.prototype.isPlayingColor = function(color) {
             return this.__internal__.playingColor.getValue() === color.getValue();
         };
