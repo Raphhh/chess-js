@@ -22,6 +22,13 @@ var Chess = (function(Chess) {
             return this.__internal__.coordinator; //todo utiliser un proxy!
         };
 
+        Game.prototype.exportToJson = function() {
+            return {
+                playingColor: this.__internal__.coordinator.getPlayingColor().getValue(),
+                pieces: this.__internal__.board.exportPieces()
+            };
+        };
+
         return Game;
 
     })();
