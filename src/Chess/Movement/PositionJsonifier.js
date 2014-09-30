@@ -13,6 +13,13 @@ var Chess = (function(Chess) {
             return new Chess.Movement.Position(positionData.x, positionData.y);
         };
 
+        PositionJsonifier.prototype.exportToJson = function(position) {
+            return {
+                x: position.getX(),
+                y: position.getY()
+            };
+        };
+
         return PositionJsonifier;
 
     })();
