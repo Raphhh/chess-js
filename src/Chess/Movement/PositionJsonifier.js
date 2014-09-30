@@ -9,7 +9,7 @@ var Chess = (function(Chess) {
 
         }
 
-        PositionJsonifier.prototype.createByData = function(positionData) {
+        PositionJsonifier.prototype.importFromJson = function(positionData) {
             return new Chess.Movement.Position(positionData.x, positionData.y);
         };
 

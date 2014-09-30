@@ -47,7 +47,7 @@ var Chess = (function(Chess) {
                 if(piecesData[i].position) {
                     this.addPiece(
                         pieceFactory.createByData(piecesData[i]),
-                        positionJsonifier.createByData(piecesData[i].position)
+                        positionJsonifier.importFromJson(piecesData[i].position)
                     );
                 } else {
                     this.addPiece(pieceFactory.createByData(piecesData[i]));
