@@ -10,7 +10,7 @@ test('setEnPassantContext', function() {
         }
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator);
     context.setEnPassantContext(piece);
 });
 
@@ -26,7 +26,7 @@ test('setEnPassantContext with another piece', function() {
         }
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator);
     context.setEnPassantContext(piece);
 });
 
@@ -39,7 +39,7 @@ test('restoreInitialContext', function() {
         }
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator);
     context.restoreInitialContext();
 });
 
@@ -52,19 +52,19 @@ test('synchronizeContextBeforeDisplacement calls setEnPassantBoard with a pawn c
     var position = new Chess.Movement.Position(1, 1);
     board.addPiece(piece, position);
 
-    var enPassantCoordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
     enPassantCoordinator.setEnPassantBoard = function() {
         ok(true);
     };
 
-    var pawnDisplacementAnalyser = new Chess.Movement.PawnDisplacementAnalyser();
+    var pawnDisplacementAnalyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser();
     pawnDisplacementAnalyser.isPawnCaptureDisplacement = function(_piece, _position) {
         deepEqual(_piece, piece);
         deepEqual(_position, position);
         return true;
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
     context.synchronizeContextBeforeDisplacement(piece, position);
 });
 
@@ -77,19 +77,19 @@ test('synchronizeContextBeforeDisplacement does not call setEnPassantBoard witho
     var position = new Chess.Movement.Position(1, 1);
     board.addPiece(piece, position);
 
-    var enPassantCoordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
     enPassantCoordinator.setEnPassantBoard = function() {
         ok(false);
     };
 
-    var pawnDisplacementAnalyser = new Chess.Movement.PawnDisplacementAnalyser();
+    var pawnDisplacementAnalyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser();
     pawnDisplacementAnalyser.isPawnCaptureDisplacement = function(_piece, _position) {
         deepEqual(_piece, piece);
         deepEqual(_position, position);
         return false;
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
     context.synchronizeContextBeforeDisplacement(piece, position);
 });
 
@@ -102,14 +102,14 @@ test('synchronizeContextBeforeDisplacement calls resetEnPassantEligiblePawn', fu
     var position = new Chess.Movement.Position(1, 1);
     board.addPiece(piece, position);
 
-    var enPassantCoordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
     enPassantCoordinator.resetEnPassantEligiblePawn = function() {
         ok(true);
     };
 
-    var pawnDisplacementAnalyser = new Chess.Movement.PawnDisplacementAnalyser();
+    var pawnDisplacementAnalyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser();
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
     context.synchronizeContextBeforeDisplacement(piece, position);
 });
 
@@ -122,20 +122,20 @@ test('synchronizeContextBeforeDisplacement calls setEnPassantEligiblePawn with a
     var position = new Chess.Movement.Position(1, 1);
     board.addPiece(piece, position);
 
-    var enPassantCoordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
     enPassantCoordinator.setEnPassantEligiblePawn = function(_piece, _position) {
         deepEqual(_piece, piece);
         deepEqual(_position, position);
     };
 
-    var pawnDisplacementAnalyser = new Chess.Movement.PawnDisplacementAnalyser();
+    var pawnDisplacementAnalyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser();
     pawnDisplacementAnalyser.isPawnDoubleSquareDisplacement = function(_piece, _position) {
         deepEqual(_piece, piece);
         deepEqual(_position, position);
         return true;
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
     context.synchronizeContextBeforeDisplacement(piece, position);
 });
 
@@ -148,18 +148,18 @@ test('synchronizeContextBeforeDisplacement does not call setEnPassantEligiblePaw
     var position = new Chess.Movement.Position(1, 1);
     board.addPiece(piece, position);
 
-    var enPassantCoordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
     enPassantCoordinator.setEnPassantEligiblePawn = function(_piece, _position) {
         ok(false);
     };
 
-    var pawnDisplacementAnalyser = new Chess.Movement.PawnDisplacementAnalyser();
+    var pawnDisplacementAnalyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser();
     pawnDisplacementAnalyser.isPawnDoubleSquareDisplacement = function(_piece, _position) {
         deepEqual(_piece, piece);
         deepEqual(_position, position);
         return false;
     };
 
-    var context = new Chess.Movement.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
+    var context = new Chess.Movement.Pawn.EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser);
     context.synchronizeContextBeforeDisplacement(piece, position);
 });

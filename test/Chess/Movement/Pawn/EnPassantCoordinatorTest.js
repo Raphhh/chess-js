@@ -7,7 +7,7 @@ test('setEnPassantBoard', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, initPosition);
 
-    var coordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
 
     coordinator.setEnPassantEligiblePawn(piece, finalPosition);
     board.changePiecePosition(piece, finalPosition);
@@ -26,7 +26,7 @@ test('setEnPassantBoard without setting eligible pawn', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, initPosition);
 
-    var coordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
 
     board.changePiecePosition(piece, finalPosition);
     deepEqual(piece.getSquare().getPosition(), finalPosition);
@@ -45,7 +45,7 @@ test('restoreInitialBoard after setEnPassantBoard', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, initPosition);
 
-    var coordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
 
     coordinator.setEnPassantEligiblePawn(piece, finalPosition);
     board.changePiecePosition(piece, finalPosition);
@@ -67,7 +67,7 @@ test('restoreInitialBoard without setting eligible pawn', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, initPosition);
 
-    var coordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
 
     board.changePiecePosition(piece, finalPosition);
     deepEqual(piece.getSquare().getPosition(), finalPosition);
@@ -89,7 +89,7 @@ test('restoreInitialBoard', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, initPosition);
 
-    var coordinator = new Chess.Movement.EnPassantCoordinator(board);
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator(board);
 
     coordinator.setEnPassantEligiblePawn(piece, finalPosition);
     board.changePiecePosition(piece, finalPosition);

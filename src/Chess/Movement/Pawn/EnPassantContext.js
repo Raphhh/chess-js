@@ -2,8 +2,9 @@ var Chess = (function(Chess) {
     'use strict';
 
     Chess.Movement = Chess.Movement || {};
+    Chess.Movement.Pawn = Chess.Movement.Pawn || {};
 
-    Chess.Movement.EnPassantContext = (function() {
+    Chess.Movement.Pawn.EnPassantContext = (function() {
 
         function EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser) {
             this.__internal__ = {

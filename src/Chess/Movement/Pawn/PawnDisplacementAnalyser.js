@@ -2,8 +2,9 @@ var Chess = (function(Chess) {
     'use strict';
 
     Chess.Movement = Chess.Movement || {};
+    Chess.Movement.Pawn = Chess.Movement.Pawn || {};
 
-    Chess.Movement.PawnDisplacementAnalyser = (function() {
+    Chess.Movement.Pawn.PawnDisplacementAnalyser = (function() {
 
         function PawnDisplacementAnalyser() {
 

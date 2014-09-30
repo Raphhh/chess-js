@@ -6,7 +6,7 @@ test('isPawnDoubleSquareDisplacement for white', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnDoubleSquareDisplacement(piece, new Chess.Movement.Position(1, 3)), true);
 });
@@ -19,7 +19,7 @@ test('isPawnDoubleSquareDisplacement for black', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnDoubleSquareDisplacement(piece, new Chess.Movement.Position(1, 4)), true);
 });
@@ -32,7 +32,7 @@ test('isPawnDoubleSquareDisplacement with other piece than a pawn', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnDoubleSquareDisplacement(piece, new Chess.Movement.Position(1, 3)), false);
 });
@@ -45,7 +45,7 @@ test('isPawnDoubleSquareDisplacement with just one square displacement', functio
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnDoubleSquareDisplacement(piece, new Chess.Movement.Position(1, 2)), false);
 });
@@ -58,7 +58,7 @@ test('isPawnDoubleSquareDisplacement with another piece', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnDoubleSquareDisplacement(piece, new Chess.Movement.Position(1, 3)), false);
 });
@@ -69,7 +69,7 @@ test('isPawnDoubleSquareDisplacement with pawn out of the board', function() {
     var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
     var board = new Chess.Board.Board();
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     throws(
         function() {
@@ -89,7 +89,7 @@ test('isPawnCaptureDisplacement for white', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(2, 2)), true);
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(0, 2)), true);
@@ -103,7 +103,7 @@ test('isPawnCaptureDisplacement for black', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(2, 0)), true);
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(0, 0)), true);
@@ -117,7 +117,7 @@ test('isPawnCaptureDisplacement with simple displacement', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(1, 2)), false);
 });
@@ -130,7 +130,7 @@ test('isPawnCaptureDisplacement with double displacement', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(1, 3)), false);
 });
@@ -143,7 +143,7 @@ test('isPawnCaptureDisplacement with another piece', function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     strictEqual(analyser.isPawnCaptureDisplacement(piece, new Chess.Movement.Position(2, 2)), false);
 });
@@ -155,7 +155,7 @@ test('isPawnCaptureDisplacement with a pawn out of the board', function() {
     var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
     var board = new Chess.Board.Board();
 
-    var analyser = new Chess.Movement.PawnDisplacementAnalyser(board);
+    var analyser = new Chess.Movement.Pawn.PawnDisplacementAnalyser(board);
 
     throws(
         function() {

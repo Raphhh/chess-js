@@ -269,9 +269,9 @@ var Chess = (function(Chess) {
                 board: board,
                 colorSwitcher: new Chess.Piece.ColorSwitcher(playingColor),
                 calculator: new Chess.Movement.DisplacementsCalculator(board),
-                enPassantContext: new Chess.Movement.EnPassantContext(
-                    new Chess.Movement.EnPassantCoordinator(board),
-                    new Chess.Movement.PawnDisplacementAnalyser()
+                enPassantContext: new Chess.Movement.Pawn.EnPassantContext(
+                    new Chess.Movement.Pawn.EnPassantCoordinator(board),
+                    new Chess.Movement.Pawn.PawnDisplacementAnalyser()
                 )
             };
         }
@@ -421,7 +421,60 @@ var Chess = (function(Chess) {
 
     Chess.Movement = Chess.Movement || {};
 
-    Chess.Movement.EnPassantContext = (function() {
+    Chess.Movement.Mover = (function() {
+
+        var moveXPosition = function() {
+            return this.__internal__.position.getX() + this.getCurrentDisplacement().getX();
+        };
+
+        var moveYPosition = function() {
+            return this.__internal__.position.getY() + this.getCurrentDisplacement().getY();
+        };
+
+        function Mover(position, displacementsSuite) {
+            this.__internal__ = {
+                position: position,
+                initialPosition: position,
+                displacementsSuite: displacementsSuite,
+                currentDirectionId: 0
+            };
+        }
+
+        Mover.prototype.moveOnce = function() {
+            if(!this.getCurrentDisplacement()) {
+                return null;
+            }
+            this.__internal__.position = new Chess.Movement.Position(moveXPosition.call(this), moveYPosition.call(this));
+            return this.__internal__.position;
+        };
+
+        Mover.prototype.getCurrentDisplacement = function() {
+            if(this.__internal__.displacementsSuite[this.__internal__.currentDirectionId]) {
+                return this.__internal__.displacementsSuite[this.__internal__.currentDirectionId];
+            }
+            return null;
+        };
+
+        Mover.prototype.changeDirection = function() {
+            this.__internal__.currentDirectionId++;
+            this.__internal__.position = this.__internal__.initialPosition;
+        };
+
+        return Mover;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Movement = Chess.Movement || {};
+    Chess.Movement.Pawn = Chess.Movement.Pawn || {};
+
+    Chess.Movement.Pawn.EnPassantContext = (function() {
 
         function EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser) {
             this.__internal__ = {
@@ -464,8 +517,9 @@ var Chess = (function(Chess) {
     'use strict';
 
     Chess.Movement = Chess.Movement || {};
+    Chess.Movement.Pawn = Chess.Movement.Pawn || {};
 
-    Chess.Movement.EnPassantCoordinator = (function() {
+    Chess.Movement.Pawn.EnPassantCoordinator = (function() {
 
         function EnPassantCoordinator(board) {
             this.__internal__ = {
@@ -522,60 +576,9 @@ var Chess = (function(Chess) {
     'use strict';
 
     Chess.Movement = Chess.Movement || {};
+    Chess.Movement.Pawn = Chess.Movement.Pawn || {};
 
-    Chess.Movement.Mover = (function() {
-
-        var moveXPosition = function() {
-            return this.__internal__.position.getX() + this.getCurrentDisplacement().getX();
-        };
-
-        var moveYPosition = function() {
-            return this.__internal__.position.getY() + this.getCurrentDisplacement().getY();
-        };
-
-        function Mover(position, displacementsSuite) {
-            this.__internal__ = {
-                position: position,
-                initialPosition: position,
-                displacementsSuite: displacementsSuite,
-                currentDirectionId: 0
-            };
-        }
-
-        Mover.prototype.moveOnce = function() {
-            if(!this.getCurrentDisplacement()) {
-                return null;
-            }
-            this.__internal__.position = new Chess.Movement.Position(moveXPosition.call(this), moveYPosition.call(this));
-            return this.__internal__.position;
-        };
-
-        Mover.prototype.getCurrentDisplacement = function() {
-            if(this.__internal__.displacementsSuite[this.__internal__.currentDirectionId]) {
-                return this.__internal__.displacementsSuite[this.__internal__.currentDirectionId];
-            }
-            return null;
-        };
-
-        Mover.prototype.changeDirection = function() {
-            this.__internal__.currentDirectionId++;
-            this.__internal__.position = this.__internal__.initialPosition;
-        };
-
-        return Mover;
-
-    })();
-
-    return Chess;
-
-})(Chess || {});
-
-var Chess = (function(Chess) {
-    'use strict';
-
-    Chess.Movement = Chess.Movement || {};
-
-    Chess.Movement.PawnDisplacementAnalyser = (function() {
+    Chess.Movement.Pawn.PawnDisplacementAnalyser = (function() {
 
         function PawnDisplacementAnalyser() {
 

@@ -10,9 +10,9 @@ var Chess = (function(Chess) {
                 board: board,
                 colorSwitcher: new Chess.Piece.ColorSwitcher(playingColor),
                 calculator: new Chess.Movement.DisplacementsCalculator(board),
-                enPassantContext: new Chess.Movement.EnPassantContext(
-                    new Chess.Movement.EnPassantCoordinator(board),
-                    new Chess.Movement.PawnDisplacementAnalyser()
+                enPassantContext: new Chess.Movement.Pawn.EnPassantContext(
+                    new Chess.Movement.Pawn.EnPassantCoordinator(board),
+                    new Chess.Movement.Pawn.PawnDisplacementAnalyser()
                 )
             };
         }
