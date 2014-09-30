@@ -3,17 +3,17 @@ var Chess = (function(Chess) {
 
     Chess.Movement = Chess.Movement || {};
 
-    Chess.Movement.PositionFactory = (function() {
+    Chess.Movement.PositionJsonifier = (function() {
 
-        function PositionFactory() {
+        function PositionJsonifier() {
 
         }
 
-        PositionFactory.prototype.createByData = function(positionData) {
+        PositionJsonifier.prototype.createByData = function(positionData) {
             return new Chess.Movement.Position(positionData.x, positionData.y);
         };
 
-        return PositionFactory;
+        return PositionJsonifier;
 
     })();
 

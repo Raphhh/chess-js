@@ -42,12 +42,12 @@ var Chess = (function(Chess) {
 
         Board.prototype.initPieces = function(piecesData) {
             var pieceFactory = new Chess.Piece.PieceFactory();
-            var positionFactory = new Chess.Movement.PositionFactory();
+            var positionJsonifier = new Chess.Movement.PositionJsonifier();
             for(var i = 0, len = piecesData.length; i < len; ++i) {
                 if(piecesData[i].position) {
                     this.addPiece(
                         pieceFactory.createByData(piecesData[i]),
-                        positionFactory.createByData(piecesData[i].position)
+                        positionJsonifier.createByData(piecesData[i].position)
                     );
                 } else {
                     this.addPiece(pieceFactory.createByData(piecesData[i]));
