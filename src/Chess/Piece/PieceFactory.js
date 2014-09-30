@@ -22,10 +22,6 @@ var Chess = (function(Chess) {
             return new Chess.Piece.Type[capitalize(type)](new Chess.Piece.Color(color), displacementsNumber);
         };
 
-        PieceFactory.prototype.createByData = function(pieceData) {
-            return this.create(pieceData.type, pieceData.color, pieceData.displacementsNumber);
-        };
-
         return PieceFactory;
 
     })();

@@ -41,16 +41,16 @@ var Chess = (function(Chess) {
         };
 
         Board.prototype.initPieces = function(piecesData) {
-            var pieceFactory = new Chess.Piece.PieceFactory();
+            var pieceJsonifier = new Chess.Piece.PieceJsonifier();
             var positionJsonifier = new Chess.Movement.PositionJsonifier();
             for(var i = 0, len = piecesData.length; i < len; ++i) {
                 if(piecesData[i].position) {
                     this.addPiece(
-                        pieceFactory.createByData(piecesData[i]),
+                        pieceJsonifier.importFromJson(piecesData[i]),
                         positionJsonifier.importFromJson(piecesData[i].position)
                     );
                 } else {
-                    this.addPiece(pieceFactory.createByData(piecesData[i]));
+                    this.addPiece(pieceJsonifier.importFromJson(piecesData[i]));
                 }
             }
         };
