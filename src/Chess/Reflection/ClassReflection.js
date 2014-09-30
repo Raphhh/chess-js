@@ -7,7 +7,7 @@ var Chess = (function(Chess) {
 
         extend: function(childClass, parentClass) {
 
-            if(childClass instanceof parentClass) {
+            if(childClass.prototype instanceof parentClass) {
                 return;
             }
 
