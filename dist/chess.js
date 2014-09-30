@@ -53,18 +53,32 @@ var Chess = (function(Chess) {
         };
 
         Board.prototype.initPieces = function(piecesData) {
-            var pieceFactory = new Chess.Piece.PieceFactory();
-            var positionFactory = new Chess.Movement.PositionFactory();
+            var pieceJsonifier = new Chess.Piece.PieceJsonifier();
+            var positionJsonifier = new Chess.Movement.PositionJsonifier();
             for(var i = 0, len = piecesData.length; i < len; ++i) {
                 if(piecesData[i].position) {
                     this.addPiece(
-                        pieceFactory.createByData(piecesData[i]),
-                        positionFactory.createByData(piecesData[i].position)
+                        pieceJsonifier.importFromJson(piecesData[i]),
+                        positionJsonifier.importFromJson(piecesData[i].position)
                     );
                 } else {
-                    this.addPiece(pieceFactory.createByData(piecesData[i]));
+                    this.addPiece(pieceJsonifier.importFromJson(piecesData[i]));
                 }
             }
+        };
+
+        Board.prototype.exportPieces = function() {
+            var result = [];
+            var pieceJsonifier = new Chess.Piece.PieceJsonifier();
+            var positionJsonifier = new Chess.Movement.PositionJsonifier();
+            for(var i = 0, len = this.getPieces().length; i < len; ++i) {
+                var piece = pieceJsonifier.exportToJson(this.getPieces()[i]);
+                if(this.getPieces()[i].getSquare()) {
+                    piece.position = positionJsonifier.exportToJson(this.getPieces()[i].getSquare().getPosition());
+                }
+                result.push(piece);
+            }
+            return result;
         };
 
         Board.prototype.addPiece = function(piece, position) {
@@ -207,6 +221,13 @@ var Chess = (function(Chess) {
 
         Game.prototype.getCoordinator = function() {
             return this.__internal__.coordinator; //todo utiliser un proxy!
+        };
+
+        Game.prototype.exportToJson = function() {
+            return {
+                playingColor: this.__internal__.coordinator.getPlayingColor().getValue(),
+                pieces: this.__internal__.board.exportPieces()
+            };
         };
 
         return Game;
@@ -663,17 +684,24 @@ var Chess = (function(Chess) {
 
     Chess.Movement = Chess.Movement || {};
 
-    Chess.Movement.PositionFactory = (function() {
+    Chess.Movement.PositionJsonifier = (function() {
 
-        function PositionFactory() {
+        function PositionJsonifier() {
 
         }
 
-        PositionFactory.prototype.createByData = function(positionData) {
+        PositionJsonifier.prototype.importFromJson = function(positionData) {
             return new Chess.Movement.Position(positionData.x, positionData.y);
         };
 
-        return PositionFactory;
+        PositionJsonifier.prototype.exportToJson = function(position) {
+            return {
+                x: position.getX(),
+                y: position.getY()
+            };
+        };
+
+        return PositionJsonifier;
 
     })();
 
@@ -846,11 +874,38 @@ var Chess = (function(Chess) {
             return new Chess.Piece.Type[capitalize(type)](new Chess.Piece.Color(color), displacementsNumber);
         };
 
-        PieceFactory.prototype.createByData = function(pieceData) {
-            return this.create(pieceData.type, pieceData.color, pieceData.displacementsNumber);
+        return PieceFactory;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Piece = Chess.Piece || {};
+
+    Chess.Piece.PieceJsonifier = (function() {
+
+        function PieceJsonifier() {
+        }
+
+        PieceJsonifier.prototype.importFromJson = function(pieceData) {
+            var factory = new Chess.Piece.PieceFactory();
+            return factory.create(pieceData.type, pieceData.color, pieceData.displacementsNumber);
         };
 
-        return PieceFactory;
+        PieceJsonifier.prototype.exportToJson = function(piece) {
+            return {
+                type: piece.constructor.name.toLowerCase(), //todo IE compatibility
+                color: piece.getColor().getValue(),
+                displacementsNumber: piece.getDisplacementsNumber()
+            };
+        };
+
+        return PieceJsonifier;
 
     })();
 
@@ -1101,7 +1156,7 @@ var Chess = (function(Chess) {
 
         extend: function(childClass, parentClass) {
 
-            if(childClass instanceof parentClass) {
+            if(childClass.prototype instanceof parentClass) {
                 return;
             }
 
