@@ -13,6 +13,14 @@ var Chess = (function(Chess) {
             return factory.create(pieceData.type, pieceData.color, pieceData.displacementsNumber);
         };
 
+        PieceJsonifier.prototype.exportToJson = function(piece) {
+            return {
+                type: piece.constructor.name.toLowerCase(), //todo IE compatibility
+                color: piece.getColor().getValue(),
+                displacementsNumber: piece.getDisplacementsNumber()
+            };
+        };
+
         return PieceJsonifier;
 
     })();

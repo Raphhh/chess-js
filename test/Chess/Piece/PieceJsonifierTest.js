@@ -15,3 +15,11 @@ test("importFromJson", function() {
     deepEqual(jsonifier.importFromJson(pieceJson), getPieceObject());
 
 });
+
+
+test("exportToJson", function() {
+
+    var jsonifier = new Chess.Piece.PieceJsonifier();
+    deepEqual(jsonifier.exportToJson(getPieceObject()), pieceJson);
+
+});
