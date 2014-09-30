@@ -55,6 +55,20 @@ var Chess = (function(Chess) {
             }
         };
 
+        Board.prototype.exportPieces = function() {
+            var result = [];
+            var pieceJsonifier = new Chess.Piece.PieceJsonifier();
+            var positionJsonifier = new Chess.Movement.PositionJsonifier();
+            for(var i = 0, len = this.getPieces().length; i < len; ++i) {
+                var piece = pieceJsonifier.exportToJson(this.getPieces()[i]);
+                if(this.getPieces()[i].getSquare()) {
+                    piece.position = positionJsonifier.exportToJson(this.getPieces()[i].getSquare().getPosition());
+                }
+                result.push(piece);
+            }
+            return result;
+        };
+
         Board.prototype.addPiece = function(piece, position) {
             if(position) {
                 this.changePiecePosition(piece, position);

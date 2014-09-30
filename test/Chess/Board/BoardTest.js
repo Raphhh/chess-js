@@ -131,6 +131,32 @@ test("initPieces", function() {
     deepEqual(piece.getSquare().getPosition(), position);
 });
 
+test("exportPieces", function() {
+
+    var position = new Chess.Movement.Position(0, 0);
+    var board = new Chess.Board.Board();
+    var pieces = [
+        {
+            "type": "pawn",
+            "color": "black",
+            "displacementsNumber": 1,
+            "position": {
+                "x": position.getX(),
+                "y": position.getY()
+            }
+        },
+        {
+            "type": "rook",
+            "color": "white",
+            "displacementsNumber": 2
+        }
+    ];
+
+    board.initPieces(pieces);
+
+    deepEqual(board.exportPieces(), pieces);
+});
+
 
 test("initPieces without position", function() {
 
