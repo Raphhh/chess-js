@@ -15,16 +15,20 @@ var Chess = (function(Chess) {
             return this.__internal__.playingColor;
         };
 
+        ColorSwitcher.prototype.getNotPlayingColor = function() {
+            if(this.__internal__.playingColor.isWhite()) {
+                return new Chess.Piece.Color(Chess.Piece.Color.BLACK);
+            } else {
+                return new Chess.Piece.Color(Chess.Piece.Color.WHITE);
+            }
+        };
+
         ColorSwitcher.prototype.isPlayingColor = function(color) {
             return this.__internal__.playingColor.getValue() === color.getValue();
         };
 
         ColorSwitcher.prototype.switchColor = function() {
-            if(this.__internal__.playingColor.isWhite()) {
-                this.__internal__.playingColor = new Chess.Piece.Color(Chess.Piece.Color.BLACK);
-            } else {
-                this.__internal__.playingColor = new Chess.Piece.Color(Chess.Piece.Color.WHITE);
-            }
+            this.__internal__.playingColor = this.getNotPlayingColor();
         };
 
         return ColorSwitcher;

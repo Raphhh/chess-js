@@ -16,6 +16,17 @@ test('isPlayingColor true', function() {
     strictEqual(switcher.isPlayingColor(new Chess.Piece.Color(Chess.Piece.Color.BLACK)), false);
 });
 
+test('getNotPlayingColor', function() {
+    var color = new Chess.Piece.Color(Chess.Piece.Color.WHITE);
+    var switcher = new Chess.Piece.ColorSwitcher(color);
+    strictEqual(switcher.isPlayingColor(new Chess.Piece.Color(Chess.Piece.Color.WHITE)), true);
+
+    var result = switcher.getNotPlayingColor();
+
+    strictEqual(switcher.isPlayingColor(new Chess.Piece.Color(Chess.Piece.Color.WHITE)), true);
+    strictEqual(result.getValue(), Chess.Piece.Color.BLACK);
+});
+
 test('switchColor', function() {
     var color = new Chess.Piece.Color(Chess.Piece.Color.WHITE);
     var switcher = new Chess.Piece.ColorSwitcher(color);
