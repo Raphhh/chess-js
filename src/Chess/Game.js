@@ -29,6 +29,22 @@ var Chess = (function(Chess) {
             };
         };
 
+        Game.prototype.isInCheck = function() {
+            var colorSwitcher = new Chess.Piece.ColorSwitcher(this.__internal__.coordinator.getPlayingColor());
+            var builder = new Chess.Simulator.GameStateBuilder();
+            builder.createGameState(this, colorSwitcher.getNotPlayingColor());
+            var movablePieces = builder.getGameState().getMovablePieces();
+            for(var i = 0, iLen = movablePieces.length; i < iLen; ++i) {
+                var eligibleSquares = movablePieces[i].getEligibleSquares();
+                for(var j = 0, jLen = eligibleSquares.length; j < jLen; ++j) {
+                    if(eligibleSquares[j].getSquare().getPiece() instanceof Chess.Piece.Type.King) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
         return Game;
 
     })();

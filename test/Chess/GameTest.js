@@ -53,3 +53,61 @@ test("exportToJson", function() {
     });
 
 });
+
+test("isInCheck true", function() {
+
+    var game = new Chess.Game({
+        playingColor: 'black',
+        pieces: [
+            {
+                "type": "king",
+                "color": "black",
+                "position": {
+                    "x": 7,
+                    "y": 7
+                },
+                "displacementsNumber": 2
+            },
+            {
+                "type": "queen",
+                "color": "white",
+                "position": {
+                    "x": 6,
+                    "y": 6
+                },
+                "displacementsNumber": 2
+            }
+        ]
+    });
+    strictEqual(game.isInCheck(), true);
+
+});
+
+test("isInCheck false", function() {
+
+    var game = new Chess.Game({
+        playingColor: 'black',
+        pieces: [
+            {
+                "type": "king",
+                "color": "black",
+                "position": {
+                    "x": 7,
+                    "y": 7
+                },
+                "displacementsNumber": 2
+            },
+            {
+                "type": "pawn",
+                "color": "white",
+                "position": {
+                    "x": 1,
+                    "y": 1
+                },
+                "displacementsNumber": 2
+            }
+        ]
+    });
+    strictEqual(game.isInCheck(), false);
+
+});
