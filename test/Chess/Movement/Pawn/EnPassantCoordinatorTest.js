@@ -1,3 +1,23 @@
+test('getEnPassantEligiblePawn', function() {
+
+    var finalPosition = new Chess.Movement.Position(1, 3);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator({}, piece, finalPosition);
+    strictEqual(coordinator.getEnPassantEligiblePawn(), piece);
+});
+
+test('getPawnPosition', function() {
+
+    var finalPosition = new Chess.Movement.Position(1, 3);
+    var factory = new Chess.Piece.PieceFactory();
+    var piece = factory.create('pawn', Chess.Piece.Color.WHITE);
+
+    var coordinator = new Chess.Movement.Pawn.EnPassantCoordinator({}, piece, finalPosition);
+    strictEqual(coordinator.getPawnPosition(), finalPosition);
+});
+
 test('setEnPassantBoard', function() {
     var initPosition = new Chess.Movement.Position(1, 1);
     var interPosition = new Chess.Movement.Position(1, 2);

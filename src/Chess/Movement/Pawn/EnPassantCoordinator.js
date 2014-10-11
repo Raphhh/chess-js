@@ -6,13 +6,21 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Pawn.EnPassantCoordinator = (function() {
 
-        function EnPassantCoordinator(board) {
+        function EnPassantCoordinator(board, enPassantEligiblePawn, pawnPosition) {
             this.__internal__ = {
                 board: board,
-                enPassantEligiblePawn: null,
-                pawnPosition: null
+                enPassantEligiblePawn: enPassantEligiblePawn || null,
+                pawnPosition: pawnPosition || null
             };
         }
+
+        EnPassantCoordinator.prototype.getEnPassantEligiblePawn = function() {
+            return this.__internal__.enPassantEligiblePawn;
+        };
+
+        EnPassantCoordinator.prototype.getPawnPosition = function() {
+            return this.__internal__.pawnPosition;
+        };
 
         EnPassantCoordinator.prototype.resetEnPassantEligiblePawn = function() {
             this.__internal__.enPassantEligiblePawn = null;
