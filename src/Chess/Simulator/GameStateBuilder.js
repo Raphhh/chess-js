@@ -16,12 +16,11 @@ var Chess = (function(Chess) {
         };
 
         GameStateBuilder.prototype.createGameState = function(game, playingColor) {
-            game = game.exportToJson();
+            var gameData = game.exportToJson();
             if(playingColor) {
-                game.playingColor = playingColor.getValue();
+                gameData.playingColor = playingColor.getValue();
             }
-            game = new Chess.Game(game);
-            this.__internal__.gameState = new Chess.Simulator.GameState(game);
+            this.__internal__.gameState = new Chess.Simulator.GameState(new Chess.Game(gameData));
             return this;
         };
 
