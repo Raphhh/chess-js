@@ -1,7 +1,5 @@
-var defaultColor = new Chess.Piece.Color(Chess.Piece.Color.WHITE);
-
-var getGameFromBoard = function(board) { //todo refactor and delete this function
-    var game = new Chess.Game({});
+var buildGameFromBoard = function(board, playingColor) {
+    var game = new Chess.Game({playingColor: playingColor});
     game.__internal__.board = board;
     return game;
 };
@@ -12,7 +10,7 @@ test("getEligibleSquares before add piece", function() {
     var piece = factory.create('pawn', 'white');
     var board = new Chess.Board.Board();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     throws(function() {
             coordinator.getEligibleSquares(piece);
         },
@@ -32,7 +30,7 @@ test("getEligibleSquares for white pawn", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 1);
@@ -51,7 +49,7 @@ test("getEligibleSquares for black pawn", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), new Chess.Piece.Color(Chess.Piece.Color.BLACK));
+    var coordinator = buildGameFromBoard(board, Chess.Piece.Color.BLACK).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 1);
@@ -70,7 +68,7 @@ test("getEligibleSquares if is not the playing color", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 0);
@@ -85,7 +83,7 @@ test("getEligibleSquares for white pawn first displacement", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 2);
@@ -107,7 +105,7 @@ test("getEligibleSquares for black pawn first displacement", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), new Chess.Piece.Color(Chess.Piece.Color.BLACK));
+    var coordinator = buildGameFromBoard(board, Chess.Piece.Color.BLACK).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 2);
@@ -130,7 +128,7 @@ test("getEligibleSquares with piece in front of pawn", function() {
     board.addPiece(pawn, new Chess.Movement.Position(1, 1));
     board.addPiece(piece, new Chess.Movement.Position(1, 2));
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(pawn);
 
     strictEqual(result.length, 0);
@@ -150,7 +148,7 @@ test("getEligibleSquares with pawn taking in diagonal", function() {
     board.addPiece(piece1, new Chess.Movement.Position(0, 2));
     board.addPiece(piece2, new Chess.Movement.Position(2, 2));
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(pawn);
 
     strictEqual(result.length, 3);
@@ -175,7 +173,7 @@ test("getEligibleSquares for rook", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 14);
@@ -238,7 +236,7 @@ test("getEligibleSquares for bishop", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 9);
@@ -286,7 +284,7 @@ test("getEligibleSquares for queen", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
 
@@ -379,7 +377,7 @@ test("getEligibleSquares for white knight", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 8);
@@ -420,7 +418,7 @@ test("getEligibleSquares for queen", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
 
@@ -468,7 +466,7 @@ test("isEligibleMove true", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.isEligibleMove(piece, new Chess.Movement.Position(1, 2));
 
     strictEqual(result, true);
@@ -484,7 +482,7 @@ test("isEligibleMove false", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.isEligibleMove(piece, new Chess.Movement.Position(1, 4));
 
     strictEqual(result, false);
@@ -500,7 +498,7 @@ test("moveTo error", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     throws(
         function() {
             coordinator.moveTo(piece, new Chess.Movement.Position(1, 4));
@@ -525,7 +523,7 @@ test("moveTo ok", function() {
         ok(true);
     };
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     coordinator.moveTo(piece, new Chess.Movement.Position(1, 2));
 
 });
@@ -539,9 +537,9 @@ test("moveTo with color switch", function() {
     var board = new Chess.Board.Board();
     board.addPiece(piece, position);
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
 
-    deepEqual(coordinator.getPlayingColor(), defaultColor);
+    deepEqual(coordinator.getPlayingColor(), new Chess.Piece.Color(Chess.Piece.Color.WHITE));
     coordinator.moveTo(piece, new Chess.Movement.Position(1, 2));
     deepEqual(coordinator.getPlayingColor(), new Chess.Piece.Color(Chess.Piece.Color.BLACK));
 
@@ -562,7 +560,7 @@ test("getEligibleSquares for a piece int front of the other color", function() {
         new Chess.Movement.Position(1, 3)
     );
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 10);
@@ -598,7 +596,7 @@ test("getEligibleSquares for a piece int front of the same color", function() {
         new Chess.Movement.Position(1, 3)
     );
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     var result = coordinator.getEligibleSquares(piece);
 
     strictEqual(result.length, 9);
@@ -628,7 +626,7 @@ test("getEligibleSquares with capture en passant of a white pawn", function() {
 
     blackPawn.incrementDisplacementsNumber();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
 
     var result = coordinator.getEligibleSquares(blackPawn);
@@ -655,7 +653,7 @@ test("getEligibleSquares with capture en passant of a black pawn", function() {
 
     whitePawn.incrementDisplacementsNumber();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), new Chess.Piece.Color(Chess.Piece.Color.BLACK));
+    var coordinator = buildGameFromBoard(board, Chess.Piece.Color.BLACK).getCoordinator();
     coordinator.moveTo(blackPawn, new Chess.Movement.Position(2, 4));
 
     var result = coordinator.getEligibleSquares(whitePawn);
@@ -682,7 +680,7 @@ test("getEligibleSquares with capture en passant of a white pawn with a displace
 
     blackPawn.incrementDisplacementsNumber();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 2));
 
     var result = coordinator.getEligibleSquares(blackPawn);
@@ -710,7 +708,7 @@ test("getEligibleSquares with capture en passant of a white pawn with a displace
     whitePawn.incrementDisplacementsNumber();
     blackPawn.incrementDisplacementsNumber();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
 
     var result = coordinator.getEligibleSquares(blackPawn);
@@ -734,7 +732,7 @@ test("getEligibleSquares with capture en passant of a white piece but not a pawn
 
     blackPawn.incrementDisplacementsNumber();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
 
     var result = coordinator.getEligibleSquares(blackPawn);
@@ -762,7 +760,7 @@ test("getEligibleSquares with capture en passant of a white pawn not open", func
 
     blackPawn.incrementDisplacementsNumber();
 
-    var coordinator = new Chess.Movement.Coordinator(getGameFromBoard(board), defaultColor);
+    var coordinator = buildGameFromBoard(board).getCoordinator();
     coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
     coordinator.moveTo(blackPawn2, new Chess.Movement.Position(6, 5));
     coordinator.moveTo(whitePawn2, new Chess.Movement.Position(0, 3)); //we move an other piece before trying make an en passant capture
