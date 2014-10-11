@@ -9,7 +9,7 @@ var Chess = (function(Chess) {
             this.__internal__ = {
                 board: game.getBoard(),
                 colorSwitcher: new Chess.Piece.ColorSwitcher(playingColor),
-                calculator: new Chess.Movement.DisplacementsCalculator(game.getBoard()),
+                calculator: new Chess.Movement.DisplacementsCalculator(game),
                 enPassantContext: new Chess.Movement.Pawn.EnPassantContext(
                     new Chess.Movement.Pawn.EnPassantCoordinator(game.getBoard()),
                     new Chess.Movement.Pawn.PawnDisplacementAnalyser()

@@ -5,9 +5,9 @@ var Chess = (function(Chess) {
 
     Chess.Movement.DisplacementsCalculator = (function() {
 
-        function DisplacementsCalculator(board) {
+        function DisplacementsCalculator(game) {
             this.__internal__ = {
-                board: board
+                game: game
             };
         }
 
@@ -25,7 +25,7 @@ var Chess = (function(Chess) {
 
             while((newPosition = mover.moveOnce()) !== null) {
                 try {
-                    square = this.__internal__.board.getSquareByPosition(newPosition);
+                    square = this.__internal__.game.getBoard().getSquareByPosition(newPosition);
                 } catch(error) { //we are out of board
                     square = null;
                 }
