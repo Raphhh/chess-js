@@ -4,7 +4,6 @@ var Chess = (function(Chess) {
     Chess.Game = (function() {
 
         function Game(data) {
-
             this.__internal__ = {
                 data: data,
                 board: null,
