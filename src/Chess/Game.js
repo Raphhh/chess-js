@@ -23,7 +23,9 @@ var Chess = (function(Chess) {
             if(null === this.__internal__.coordinator) {
                 this.__internal__.coordinator = new Chess.Movement.Coordinator(
                     this,
-                    new Chess.Piece.Color(this.__internal__.data.playingColor || Chess.Piece.Color.WHITE)
+                    new Chess.Piece.ColorSwitcher(
+                        new Chess.Piece.Color(this.__internal__.data.playingColor || Chess.Piece.Color.WHITE)
+                    )
                 );
             }
             return this.__internal__.coordinator; //todo utiliser un proxy!
