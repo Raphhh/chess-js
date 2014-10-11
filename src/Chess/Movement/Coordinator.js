@@ -5,9 +5,9 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Coordinator = (function() {
 
-        function Coordinator(game, colorSwitcher, calculator, enPassantContext) {
+        function Coordinator(board, colorSwitcher, calculator, enPassantContext) {
             this.__internal__ = {
-                board: game.getBoard(),
+                board: board,
                 colorSwitcher: colorSwitcher,
                 calculator: calculator,
                 enPassantContext: enPassantContext
