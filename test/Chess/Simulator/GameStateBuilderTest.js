@@ -6,7 +6,7 @@ test('createGameState without new playing color', function() {
     builder.createGameState(game);
     var result = builder.getGameState();
 
-    deepEqual(result.getGame(), game);
+    deepEqual(result.getGame().exportToJson(), game.exportToJson());
     notStrictEqual(result.getGame(), game);
     deepEqual(result.getGame().exportToJson(), {
         playingColor: 'white',

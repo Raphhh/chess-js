@@ -4,33 +4,41 @@ var Chess = (function(Chess) {
     Chess.Game = (function() {
 
         function Game(data) {
-            var playingColor = new Chess.Piece.Color(data.playingColor || Chess.Piece.Color.WHITE);
-            var board = new Chess.Board.Board();
-            board.initPieces(data.pieces || []);
 
             this.__internal__ = {
-                board: board,
-                coordinator: new Chess.Movement.Coordinator(board, playingColor)
+                data: data,
+                board: null,
+                coordinator: null
             };
         }
 
         Game.prototype.getBoard = function() {
+            if(null === this.__internal__.board) {
+                this.__internal__.board = new Chess.Board.Board();
+                this.__internal__.board.initPieces(this.__internal__.data.pieces || []);
+            }
             return this.__internal__.board;
         };
 
         Game.prototype.getCoordinator = function() {
+            if(null === this.__internal__.coordinator) {
+                this.__internal__.coordinator = new Chess.Movement.Coordinator(
+                    this.getBoard(),
+                    new Chess.Piece.Color(this.__internal__.data.playingColor || Chess.Piece.Color.WHITE)
+                );
+            }
             return this.__internal__.coordinator; //todo utiliser un proxy!
         };
 
         Game.prototype.exportToJson = function() {
             return {
-                playingColor: this.__internal__.coordinator.getPlayingColor().getValue(),
-                pieces: this.__internal__.board.exportPieces()
+                playingColor: this.getCoordinator().getPlayingColor().getValue(),
+                pieces: this.getBoard().exportPieces()
             };
         };
 
         Game.prototype.isInCheck = function() {
-            var colorSwitcher = new Chess.Piece.ColorSwitcher(this.__internal__.coordinator.getPlayingColor());
+            var colorSwitcher = new Chess.Piece.ColorSwitcher(this.getCoordinator().getPlayingColor());
             var builder = new Chess.Simulator.GameStateBuilder();
             builder.createGameState(this, colorSwitcher.getNotPlayingColor());
             var movablePieces = builder.getGameState().getMovablePieces();
