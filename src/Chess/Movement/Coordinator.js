@@ -5,13 +5,13 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Coordinator = (function() {
 
-        function Coordinator(board, playingColor) {
+        function Coordinator(game, playingColor) {
             this.__internal__ = {
-                board: board,
+                board: game.getBoard(),
                 colorSwitcher: new Chess.Piece.ColorSwitcher(playingColor),
-                calculator: new Chess.Movement.DisplacementsCalculator(board),
+                calculator: new Chess.Movement.DisplacementsCalculator(game.getBoard()),
                 enPassantContext: new Chess.Movement.Pawn.EnPassantContext(
-                    new Chess.Movement.Pawn.EnPassantCoordinator(board),
+                    new Chess.Movement.Pawn.EnPassantCoordinator(game.getBoard()),
                     new Chess.Movement.Pawn.PawnDisplacementAnalyser()
                 )
             };

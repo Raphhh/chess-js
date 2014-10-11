@@ -22,7 +22,7 @@ var Chess = (function(Chess) {
         Game.prototype.getCoordinator = function() {
             if(null === this.__internal__.coordinator) {
                 this.__internal__.coordinator = new Chess.Movement.Coordinator(
-                    this.getBoard(),
+                    this,
                     new Chess.Piece.Color(this.__internal__.data.playingColor || Chess.Piece.Color.WHITE)
                 );
             }
