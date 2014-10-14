@@ -616,19 +616,35 @@ test("getEligibleSquares for a piece int front of the same color", function() {
 
 test("getEligibleSquares with capture en passant of a white pawn", function() {
 
-    var factory = new Chess.Piece.PieceFactory();
-    var whitePawn = factory.create('pawn', Chess.Piece.Color.WHITE);
-    var blackPawn = factory.create('pawn', Chess.Piece.Color.BLACK);
+    var game = new Chess.Game({
+        playingColor: 'white',
+        pieces: [
+            {
+                "type": "pawn",
+                "color": "white",
+                "position": {
+                    "x": 1,
+                    "y": 1
+                },
+                "displacementsNumber": 0
+            },
+            {
+                "type": "pawn",
+                "color": "black",
+                "position": {
+                    "x": 2,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            }
+        ]
+    });
 
-    var board = new Chess.Board.Board();
-    board.addPiece(whitePawn, new Chess.Movement.Position(1, 1));
-    board.addPiece(blackPawn, new Chess.Movement.Position(2, 3));
+    var whitePawn = game.getBoard().getPieces()[0];
+    var blackPawn = game.getBoard().getPieces()[1];
 
-    blackPawn.incrementDisplacementsNumber();
-
-    var coordinator = buildGameFromBoard(board).getCoordinator();
+    var coordinator = game.getCoordinator();
     coordinator.moveTo(whitePawn, new Chess.Movement.Position(1, 3));
-
     var result = coordinator.getEligibleSquares(blackPawn);
 
     strictEqual(result.length, 2);
