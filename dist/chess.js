@@ -204,30 +204,101 @@ var Chess = (function(Chess) {
 
     Chess.Game = (function() {
 
-        function Game(data) {
-            var playingColor = new Chess.Piece.Color(data.playingColor || Chess.Piece.Color.WHITE);
-            var board = new Chess.Board.Board();
-            board.initPieces(data.pieces || []);
+        var buildEnPassantEligiblePawn = function() { //todo delegate this stuff
+            return this.getBoard().getPieceByPosition(
+                new Chess.Movement.Position(
+                    this.__internal__.data.enPassantContext.position.x,
+                    this.__internal__.data.enPassantContext.position.y
+                )
+            );
+        };
 
+        var buildEnPassantEligiblePawnPosition = function() {  //todo delegate this stuff
+            return new Chess.Movement.Position(
+                this.__internal__.data.enPassantContext.position.x,
+                this.__internal__.data.enPassantContext.position.y
+            );
+        };
+
+        var getEnPassantCoordinator = function() {  //todo delegate this stuff
+            if(null === this.__internal__.enPassantCoordinator) {
+                this.__internal__.enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(
+                    this.getBoard(),
+                    this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawn.call(this) : null,
+                    this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawnPosition.call(this) : null
+                );
+            }
+            return this.__internal__.enPassantCoordinator;
+        };
+
+        function Game(data) {
             this.__internal__ = {
-                board: board,
-                coordinator: new Chess.Movement.Coordinator(board, playingColor)
+                data: data,
+                board: null,
+                coordinator: null,
+                enPassantCoordinator: null
             };
         }
 
         Game.prototype.getBoard = function() {
+            if(null === this.__internal__.board) {
+                this.__internal__.board = new Chess.Board.Board();
+                this.__internal__.board.initPieces(this.__internal__.data.pieces || []);
+            }
             return this.__internal__.board;
         };
 
-        Game.prototype.getCoordinator = function() {
+        Game.prototype.getCoordinator = function() { //todo delegate this stuff
+            if(null === this.__internal__.coordinator) {
+                this.__internal__.coordinator = new Chess.Movement.Coordinator(
+                    this.getBoard(),
+                    new Chess.Piece.ColorSwitcher(
+                        new Chess.Piece.Color(this.__internal__.data.playingColor || Chess.Piece.Color.WHITE)
+                    ),
+                    new Chess.Movement.DisplacementsCalculator(this),
+                    new Chess.Movement.Pawn.EnPassantContext(
+                        getEnPassantCoordinator.call(this),
+                        new Chess.Movement.Pawn.PawnDisplacementAnalyser()
+                    )
+                );
+            }
             return this.__internal__.coordinator; //todo utiliser un proxy!
         };
 
-        Game.prototype.exportToJson = function() {
-            return {
-                playingColor: this.__internal__.coordinator.getPlayingColor().getValue(),
-                pieces: this.__internal__.board.exportPieces()
+        Game.prototype.exportToJson = function() { //todo rename in export (because it is not a json)
+            //todo delegate this stuff
+            var data = {
+                playingColor: this.getCoordinator().getPlayingColor().getValue(),
+                pieces: this.getBoard().exportPieces()
             };
+
+            var pawnPosition = getEnPassantCoordinator.call(this).getPawnPosition();
+            if(pawnPosition) {
+                data.enPassantContext = {
+                    position: {
+                        x: pawnPosition.getX(),
+                        y: pawnPosition.getY()
+                    }
+                };
+            }
+
+            return data;
+        };
+
+        Game.prototype.isInCheck = function() {//todo delegate this stuff
+            var colorSwitcher = new Chess.Piece.ColorSwitcher(this.getCoordinator().getPlayingColor());
+            var builder = new Chess.Simulator.GameStateBuilder();
+            builder.createGameState(this, colorSwitcher.getNotPlayingColor());
+            var movablePieces = builder.getGameState().getMovablePieces();
+            for(var i = 0, iLen = movablePieces.length; i < iLen; ++i) {
+                var eligibleSquares = movablePieces[i].getEligibleSquares();
+                for(var j = 0, jLen = eligibleSquares.length; j < jLen; ++j) {
+                    if(eligibleSquares[j].getSquare().getPiece() instanceof Chess.Piece.Type.King) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         };
 
         return Game;
@@ -285,15 +356,12 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Coordinator = (function() {
 
-        function Coordinator(board, playingColor) {
+        function Coordinator(board, colorSwitcher, calculator, enPassantContext) {
             this.__internal__ = {
                 board: board,
-                colorSwitcher: new Chess.Piece.ColorSwitcher(playingColor),
-                calculator: new Chess.Movement.DisplacementsCalculator(board),
-                enPassantContext: new Chess.Movement.Pawn.EnPassantContext(
-                    new Chess.Movement.Pawn.EnPassantCoordinator(board),
-                    new Chess.Movement.Pawn.PawnDisplacementAnalyser()
-                )
+                colorSwitcher: colorSwitcher,
+                calculator: calculator,
+                enPassantContext: enPassantContext
             };
         }
 
@@ -388,9 +456,9 @@ var Chess = (function(Chess) {
 
     Chess.Movement.DisplacementsCalculator = (function() {
 
-        function DisplacementsCalculator(board) {
+        function DisplacementsCalculator(game) {
             this.__internal__ = {
-                board: board
+                game: game
             };
         }
 
@@ -408,7 +476,7 @@ var Chess = (function(Chess) {
 
             while((newPosition = mover.moveOnce()) !== null) {
                 try {
-                    square = this.__internal__.board.getSquareByPosition(newPosition);
+                    square = this.__internal__.game.getBoard().getSquareByPosition(newPosition);
                 } catch(error) { //we are out of board
                     square = null;
                 }
@@ -542,13 +610,21 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Pawn.EnPassantCoordinator = (function() {
 
-        function EnPassantCoordinator(board) {
+        function EnPassantCoordinator(board, enPassantEligiblePawn, pawnPosition) {
             this.__internal__ = {
                 board: board,
-                enPassantEligiblePawn: null,
-                pawnPosition: null
+                enPassantEligiblePawn: enPassantEligiblePawn || null,
+                pawnPosition: pawnPosition || null
             };
         }
+
+        EnPassantCoordinator.prototype.getEnPassantEligiblePawn = function() {
+            return this.__internal__.enPassantEligiblePawn;
+        };
+
+        EnPassantCoordinator.prototype.getPawnPosition = function() {
+            return this.__internal__.pawnPosition;
+        };
 
         EnPassantCoordinator.prototype.resetEnPassantEligiblePawn = function() {
             this.__internal__.enPassantEligiblePawn = null;
@@ -775,16 +851,20 @@ var Chess = (function(Chess) {
             return this.__internal__.playingColor;
         };
 
+        ColorSwitcher.prototype.getNotPlayingColor = function() {
+            if(this.__internal__.playingColor.isWhite()) {
+                return new Chess.Piece.Color(Chess.Piece.Color.BLACK);
+            } else {
+                return new Chess.Piece.Color(Chess.Piece.Color.WHITE);
+            }
+        };
+
         ColorSwitcher.prototype.isPlayingColor = function(color) {
             return this.__internal__.playingColor.getValue() === color.getValue();
         };
 
         ColorSwitcher.prototype.switchColor = function() {
-            if(this.__internal__.playingColor.isWhite()) {
-                this.__internal__.playingColor = new Chess.Piece.Color(Chess.Piece.Color.BLACK);
-            } else {
-                this.__internal__.playingColor = new Chess.Piece.Color(Chess.Piece.Color.WHITE);
-            }
+            this.__internal__.playingColor = this.getNotPlayingColor();
         };
 
         return ColorSwitcher;
@@ -1178,6 +1258,163 @@ var Chess = (function(Chess) {
             return new F();
         }
     };
+
+    return Chess;
+
+})(Chess || {});
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.EligibleSquare = (function() {
+
+        function EligibleSquare(game, piece, square) {
+            this.__internal__ = {
+                game: game,
+                piece: piece,
+                square: square
+            };
+        }
+
+        EligibleSquare.prototype.getSquare = function() {
+            return this.__internal__.square;
+        };
+
+        EligibleSquare.prototype.getGameState = function() {
+            var builder = new Chess.Simulator.GameStateBuilder();
+            builder.createGameState(this.__internal__.game);
+            builder.changePiecePosition(this.__internal__.piece, this.__internal__.square.getPosition());
+            return builder.getGameState();
+        };
+
+        return EligibleSquare;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.GameState = (function() {
+
+        function GameState(game) {
+            this.__internal__ = {
+                game: game
+            };
+        }
+
+        GameState.prototype.getGame = function() {
+            return this.__internal__.game;
+        };
+
+        GameState.prototype.getMovablePieces = function() {
+            var result = [];
+            var pieces = this.__internal__.game.getBoard().getPieces();
+            for(var i = 0, len = pieces.length; i < len; ++i) {
+                var squares = this.__internal__.game.getCoordinator().getEligibleSquares(pieces[i]);
+                if(squares.length) {
+                    result.push(new Chess.Simulator.MovablePiece(
+                        this.__internal__.game,
+                        pieces[i],
+                        squares
+                    ));
+                }
+            }
+            return result;
+        };
+
+        return GameState;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.GameStateBuilder = (function() {
+
+        function GameStateBuilder() {
+            this.__internal__ = {
+                gameState: null
+            };
+        }
+
+        GameStateBuilder.prototype.getGameState = function() {
+            return this.__internal__.gameState;
+        };
+
+        GameStateBuilder.prototype.createGameState = function(game, playingColor) {
+            var gameData = game.exportToJson();
+            if(playingColor) {
+                gameData.playingColor = playingColor.getValue();
+            }
+            this.__internal__.gameState = new Chess.Simulator.GameState(new Chess.Game(gameData));
+            return this;
+        };
+
+        GameStateBuilder.prototype.changePiecePosition = function(piece, position) {
+            piece = this.__internal__.gameState.getGame().getBoard().getPieceByPosition(piece.getSquare().getPosition());
+            this.__internal__.gameState.getGame().getCoordinator().moveTo(piece, position);
+            return this;
+        };
+
+        return GameStateBuilder;
+
+    })();
+
+    return Chess;
+
+})(Chess || {});
+
+
+var Chess = (function(Chess) {
+    'use strict';
+
+    Chess.Simulator = Chess.Simulator || {};
+
+    Chess.Simulator.MovablePiece = (function() {
+
+        function MovablePiece(game, piece, squares) {
+            this.__internal__ = {
+                game: game,
+                piece: piece,
+                squares: squares
+            };
+        }
+
+        MovablePiece.prototype.getPiece = function() {
+            return this.__internal__.piece;
+        };
+
+        MovablePiece.prototype.getEligibleSquares = function() {
+            var result = [];
+            for(var i = 0, len = this.__internal__.squares.length; i < len; ++i) {
+                result.push(new Chess.Simulator.EligibleSquare(
+                    this.__internal__.game,
+                    this.__internal__.piece,
+                    this.__internal__.squares[i]
+                ));
+            }
+            return result;
+        };
+
+        return MovablePiece;
+
+    })();
 
     return Chess;
 
