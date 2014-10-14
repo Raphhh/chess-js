@@ -233,3 +233,18 @@ test('init data with enPassantContext with wrong pawn coordination', function() 
     strictEqual(result[0].getPosition().getX(), 2);
     strictEqual(result[0].getPosition().getY(), 2);
 });
+
+test('export data with enPassantContext', function() {
+    var data = {
+        playingColor: 'black',
+        enPassantContext: {
+            position: {
+                x: 1,
+                y: 3
+            }
+        },
+        pieces: []
+    };
+    var game = new Chess.Game(data);
+    deepEqual(game.exportToJson(), data);
+});

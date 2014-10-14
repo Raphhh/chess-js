@@ -19,11 +19,23 @@ var Chess = (function(Chess) {
             );
         };
 
+        var getEnPassantCoordinator = function() {
+            if(null === this.__internal__.enPassantCoordinator) {
+                this.__internal__.enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(
+                    this.getBoard(),
+                    this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawn.call(this) : null,
+                    this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawnPosition.call(this) : null
+                );
+            }
+            return this.__internal__.enPassantCoordinator;
+        };
+
         function Game(data) {
             this.__internal__ = {
                 data: data,
                 board: null,
-                coordinator: null
+                coordinator: null,
+                enPassantCoordinator: null
             };
         }
 
@@ -44,11 +56,7 @@ var Chess = (function(Chess) {
                     ),
                     new Chess.Movement.DisplacementsCalculator(this),
                     new Chess.Movement.Pawn.EnPassantContext(
-                        new Chess.Movement.Pawn.EnPassantCoordinator(
-                            this.getBoard(),
-                            this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawn.call(this) : null,
-                            this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawnPosition.call(this) : null
-                        ),
+                        getEnPassantCoordinator.call(this),
                         new Chess.Movement.Pawn.PawnDisplacementAnalyser()
                     )
                 );
@@ -57,10 +65,23 @@ var Chess = (function(Chess) {
         };
 
         Game.prototype.exportToJson = function() {
-            return {
+
+            var data = {
                 playingColor: this.getCoordinator().getPlayingColor().getValue(),
                 pieces: this.getBoard().exportPieces()
             };
+
+            var pawnPosition = getEnPassantCoordinator.call(this).getPawnPosition();
+            if(pawnPosition) {
+                data.enPassantContext = {
+                    position: {
+                        x: pawnPosition.getX(),
+                        y: pawnPosition.getY()
+                    }
+                };
+            }
+
+            return data;
         };
 
         Game.prototype.isInCheck = function() {
