@@ -48,6 +48,7 @@ var BoardGui = (function($) {
         } else if($square.hasClass('eligible') && this.$selectedSquare) {
             this.movePiece(this.$selectedSquare, $square);
             this.resetHighlights();
+            this.checkInCheck();
         } else if($square.html()) {
             this.resetHighlights();
             this.selectPiece($square);
@@ -78,6 +79,12 @@ var BoardGui = (function($) {
             this.$selectedSquare = null;
         } catch(e) {
             alert(e.message);
+        }
+    };
+
+    BoardGui.prototype.checkInCheck = function() {
+        if(this.game.isInCheck()) {
+            alert(this.game.getCoordinator().getPlayingColor().getValue() + ' in check!');
         }
     };
 
