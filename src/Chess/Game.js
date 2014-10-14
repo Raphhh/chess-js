@@ -3,6 +3,22 @@ var Chess = (function(Chess) {
 
     Chess.Game = (function() {
 
+        var buildEnPassantEligiblePawn = function() {
+            return this.getBoard().getPieceByPosition(
+                new Chess.Movement.Position(
+                    this.__internal__.data.enPassantContext.position.x,
+                    this.__internal__.data.enPassantContext.position.y
+                )
+            );
+        };
+
+        var buildEnPassantEligiblePawnPosition = function() {
+            return new Chess.Movement.Position(
+                this.__internal__.data.enPassantContext.position.x,
+                this.__internal__.data.enPassantContext.position.y
+            );
+        };
+
         function Game(data) {
             this.__internal__ = {
                 data: data,
@@ -28,7 +44,11 @@ var Chess = (function(Chess) {
                     ),
                     new Chess.Movement.DisplacementsCalculator(this),
                     new Chess.Movement.Pawn.EnPassantContext(
-                        new Chess.Movement.Pawn.EnPassantCoordinator(this.getBoard()),
+                        new Chess.Movement.Pawn.EnPassantCoordinator(
+                            this.getBoard(),
+                            this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawn.call(this) : null,
+                            this.__internal__.data.enPassantContext ? buildEnPassantEligiblePawnPosition.call(this) : null
+                        ),
                         new Chess.Movement.Pawn.PawnDisplacementAnalyser()
                     )
                 );

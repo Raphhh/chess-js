@@ -111,3 +111,125 @@ test("isInCheck false", function() {
     strictEqual(game.isInCheck(), false);
 
 });
+
+test('init data without enPassantContext', function() {
+
+    var game = new Chess.Game({
+        playingColor: 'black',
+        pieces: [
+            {
+                "type": "pawn",
+                "color": "white",
+                "position": {
+                    "x": 1,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            },
+            {
+                "type": "pawn",
+                "color": "black",
+                "position": {
+                    "x": 2,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            }
+        ]
+    });
+
+    var blackPawn = game.getBoard().getPieces()[1];
+    var result = game.getCoordinator().getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 1);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+});
+
+
+test('init data with enPassantContext', function() {
+
+    var game = new Chess.Game({
+        playingColor: 'black',
+        enPassantContext: {
+            position: {
+                x: 1,
+                y: 3
+            }
+        },
+        pieces: [
+            {
+                "type": "pawn",
+                "color": "white",
+                "position": {
+                    "x": 1,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            },
+            {
+                "type": "pawn",
+                "color": "black",
+                "position": {
+                    "x": 2,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            }
+        ]
+    });
+
+    var blackPawn = game.getBoard().getPieces()[1];
+    var result = game.getCoordinator().getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+
+    strictEqual(result[1].getPosition().getX(), 1);
+    strictEqual(result[1].getPosition().getY(), 2);
+});
+
+
+test('init data with enPassantContext with wrong pawn coordination', function() {
+
+    var game = new Chess.Game({
+        playingColor: 'black',
+        enPassantContext: {
+            position: {
+                x: 7,
+                y: 7
+            }
+        },
+        pieces: [
+            {
+                "type": "pawn",
+                "color": "white",
+                "position": {
+                    "x": 1,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            },
+            {
+                "type": "pawn",
+                "color": "black",
+                "position": {
+                    "x": 2,
+                    "y": 3
+                },
+                "displacementsNumber": 1
+            }
+        ]
+    });
+
+    var blackPawn = game.getBoard().getPieces()[1];
+    var result = game.getCoordinator().getEligibleSquares(blackPawn);
+
+    strictEqual(result.length, 1);
+
+    strictEqual(result[0].getPosition().getX(), 2);
+    strictEqual(result[0].getPosition().getY(), 2);
+});
