@@ -3,7 +3,7 @@ var Chess = (function(Chess) {
 
     Chess.Game = (function() {
 
-        var buildEnPassantEligiblePawn = function() {
+        var buildEnPassantEligiblePawn = function() { //todo delegate this stuff
             return this.getBoard().getPieceByPosition(
                 new Chess.Movement.Position(
                     this.__internal__.data.enPassantContext.position.x,
@@ -12,14 +12,14 @@ var Chess = (function(Chess) {
             );
         };
 
-        var buildEnPassantEligiblePawnPosition = function() {
+        var buildEnPassantEligiblePawnPosition = function() {  //todo delegate this stuff
             return new Chess.Movement.Position(
                 this.__internal__.data.enPassantContext.position.x,
                 this.__internal__.data.enPassantContext.position.y
             );
         };
 
-        var getEnPassantCoordinator = function() {
+        var getEnPassantCoordinator = function() {  //todo delegate this stuff
             if(null === this.__internal__.enPassantCoordinator) {
                 this.__internal__.enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(
                     this.getBoard(),
@@ -47,7 +47,7 @@ var Chess = (function(Chess) {
             return this.__internal__.board;
         };
 
-        Game.prototype.getCoordinator = function() {
+        Game.prototype.getCoordinator = function() { //todo delegate this stuff
             if(null === this.__internal__.coordinator) {
                 this.__internal__.coordinator = new Chess.Movement.Coordinator(
                     this.getBoard(),
@@ -64,8 +64,8 @@ var Chess = (function(Chess) {
             return this.__internal__.coordinator; //todo utiliser un proxy!
         };
 
-        Game.prototype.exportToJson = function() {
-
+        Game.prototype.exportToJson = function() { //todo rename in export (because it is not a json)
+            //todo delegate this stuff
             var data = {
                 playingColor: this.getCoordinator().getPlayingColor().getValue(),
                 pieces: this.getBoard().exportPieces()
@@ -84,7 +84,7 @@ var Chess = (function(Chess) {
             return data;
         };
 
-        Game.prototype.isInCheck = function() {
+        Game.prototype.isInCheck = function() {//todo delegate this stuff
             var colorSwitcher = new Chess.Piece.ColorSwitcher(this.getCoordinator().getPlayingColor());
             var builder = new Chess.Simulator.GameStateBuilder();
             builder.createGameState(this, colorSwitcher.getNotPlayingColor());
