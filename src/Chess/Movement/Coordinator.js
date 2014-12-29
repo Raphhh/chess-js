@@ -20,7 +20,7 @@ var Chess = (function(Chess) {
 
         Coordinator.prototype.moveTo = function(piece, position) {
             if(!this.isEligibleMove(piece, position)) {
-                throw new Error('Try an invalid move');
+                throw new Error('Try an invalid move: ' + piece.getName() + ' from ' + piece.getSquare().getPosition().toAlgebraicNotation() + ' to ' + position.toAlgebraicNotation());
             }
             this.__internal__.enPassantContext.synchronizeContextBeforeDisplacement(piece, position);
             this.__internal__.board.changePiecePosition(piece, position);
