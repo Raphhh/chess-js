@@ -84,10 +84,9 @@ var Chess = (function(Chess) {
             return data;
         };
 
-        Game.prototype.isInCheck = function() {//todo delegate this stuff
-            var colorSwitcher = new Chess.Piece.ColorSwitcher(this.getCoordinator().getPlayingColor());
+        Game.prototype.isInCheck = function(changePlayingColor) {//todo delegate this stuff
             var builder = new Chess.Simulator.GameStateBuilder();
-            builder.createGameState(this, colorSwitcher.getNotPlayingColor());
+            builder.createGameState(this, !changePlayingColor);
             var movablePieces = builder.getGameState().getMovablePieces();
             for(var i = 0, iLen = movablePieces.length; i < iLen; ++i) {
                 var eligibleSquares = movablePieces[i].getEligibleSquares();
@@ -98,6 +97,29 @@ var Chess = (function(Chess) {
                 }
             }
             return false;
+
+            /*
+
+             var builder = new Chess.Simulator.GameStateBuilder();
+             if(forNotPlayingColor){
+             debugger;
+             builder.createGameState(this, this.getCoordinator().getPlayingColor());
+             }else{
+             var colorSwitcher = new Chess.Piece.ColorSwitcher(this.getCoordinator().getPlayingColor());
+             builder.createGameState(this, colorSwitcher.getNotPlayingColor());
+             }
+
+             var movablePieces = builder.getGameState().getMovablePieces();
+             for(var i = 0, iLen = movablePieces.length; i < iLen; ++i) {
+             var eligibleSquares = movablePieces[i].getEligibleSquares();
+             for(var j = 0, jLen = eligibleSquares.length; j < jLen; ++j) {
+             if(eligibleSquares[j].getSquare().getPiece() instanceof Chess.Piece.Type.King) {
+             return true;
+             }
+             }
+             }
+             return false;
+            * */
         };
 
         return Game;

@@ -20,7 +20,7 @@ test('createGameState with new playing color', function() {
     var game = new Chess.Game({});
 
     var builder = new Chess.Simulator.GameStateBuilder();
-    builder.createGameState(game, new Chess.Piece.Color(Chess.Piece.Color.BLACK));
+    builder.createGameState(game, true);
     var result = builder.getGameState();
 
     deepEqual(result.getGame().exportToJson(), {
