@@ -5,8 +5,19 @@ var Chess = (function(Chess) {
 
     Chess.Movement.DisplacementsCalculator = (function() {
 
+        /**
+         *
+         * @type {boolean}
+         */
         var isSimulation = false;
 
+        /**
+         *
+         * @param {Chess.Game} game
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} position
+         * @returns {boolean}
+         */
         var willBeInCheck = function(game, piece, position){
             if(isSimulation){
                 return false;
@@ -21,12 +32,22 @@ var Chess = (function(Chess) {
             return result;
         };
 
+        /**
+         *
+         * @param {Chess.Game} game
+         * @constructor
+         */
         function DisplacementsCalculator(game) {
             this.__internal__ = {
                 game: game
             };
         }
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @returns {Chess.Board.Square[]}
+         */
         DisplacementsCalculator.prototype.getEligibleSquares = function(piece) {
 
             if(!piece.getSquare()) {

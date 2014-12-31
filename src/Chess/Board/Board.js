@@ -5,6 +5,9 @@ var Chess = (function(Chess) {
 
     Chess.Board.Board = (function() {
 
+        /**
+         *
+         */
         var initSquares = function() {
             for(var x = 0; x < 8; ++x) {
                 this.__internal__.squares.push([]);
@@ -14,6 +17,10 @@ var Chess = (function(Chess) {
             }
         };
 
+        /**
+         *
+         * @constructor
+         */
         function Board() {
             this.__internal__ = {
                 pieces: [],
@@ -22,6 +29,11 @@ var Chess = (function(Chess) {
             initSquares.call(this);
         }
 
+        /**
+         *
+         * @param {Chess.Movement.Position} position
+         * @returns {Chess.Board.Square}
+         */
         Board.prototype.getSquareByPosition = function(position) {
             if(!this.__internal__.squares[position.getX()]) {
                 throw new Error('Position x (' + position.getX() + ') out of board');
@@ -32,14 +44,27 @@ var Chess = (function(Chess) {
             return this.__internal__.squares[position.getX()][position.getY()];
         };
 
+        /**
+         *
+         * @returns {Chess.Piece.Piece}
+         */
         Board.prototype.getPieces = function() {
             return this.__internal__.pieces;
         };
 
+        /**
+         *
+         * @param {Chess.Movement.Position} position
+         * @returns {Chess.Piece.Piece}
+         */
         Board.prototype.getPieceByPosition = function(position) {
             return this.getSquareByPosition(position).getPiece();
         };
 
+        /**
+         *
+         * @param {Object} piecesData
+         */
         Board.prototype.initPieces = function(piecesData) {
             var pieceJsonifier = new Chess.Piece.PieceJsonifier();
             var positionJsonifier = new Chess.Movement.PositionJsonifier();
@@ -55,6 +80,10 @@ var Chess = (function(Chess) {
             }
         };
 
+        /**
+         *
+         * @returns {Array}
+         */
         Board.prototype.exportPieces = function() {
             var result = [];
             var pieceJsonifier = new Chess.Piece.PieceJsonifier();
@@ -69,6 +98,11 @@ var Chess = (function(Chess) {
             return result;
         };
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} [position]
+         */
         Board.prototype.addPiece = function(piece, position) {
             if(position) {
                 this.changePiecePosition(piece, position);
@@ -76,6 +110,11 @@ var Chess = (function(Chess) {
             this.__internal__.pieces.push(piece);
         };
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} position
+         */
         Board.prototype.changePiecePosition = function(piece, position) {
             var associator = new Chess.Board.SquareAssociator(
                 piece,

@@ -8,6 +8,12 @@ var Chess = (function(Chess) {
         var xMappging = 'abcdefgh';
         var yMappging = '12345678';
 
+        /**
+         *
+         * @param {int} x
+         * @param {int} y
+         * @constructor
+         */
         function Position(x, y) {
             this.__internal__ = {
                 x: x,
@@ -15,6 +21,11 @@ var Chess = (function(Chess) {
             };
         }
 
+        /**
+         *
+         * @param algebraicNotation
+         * @returns {Position}
+         */
         Position.createByAlgebraicNotation = function(algebraicNotation) {
             var splitNotation = algebraicNotation.split('');
             return new Position(
@@ -23,14 +34,26 @@ var Chess = (function(Chess) {
             );
         };
 
+        /**
+         *
+         * @returns {int}
+         */
         Position.prototype.getX = function() {
             return this.__internal__.x;
         };
 
+        /**
+         *
+         * @returns {int}
+         */
         Position.prototype.getY = function() {
             return this.__internal__.y;
         };
 
+        /**
+         *
+         * @returns {string}
+         */
         Position.prototype.toAlgebraicNotation = function() {
             return xMappging.charAt(this.getX()) + yMappging.charAt(this.getY());
         };

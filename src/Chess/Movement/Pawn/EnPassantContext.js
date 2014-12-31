@@ -6,6 +6,12 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Pawn.EnPassantContext = (function() {
 
+        /**
+         *
+         * @param {Chess.Movement.Pawn.EnPassantCoordinator} enPassantCoordinator
+         * @param {Chess.Movement.Pawn.PawnDisplacementAnalyser} pawnDisplacementAnalyser
+         * @constructor
+         */
         function EnPassantContext(enPassantCoordinator, pawnDisplacementAnalyser) {
             this.__internal__ = {
                 enPassantCoordinator: enPassantCoordinator,
@@ -13,6 +19,11 @@ var Chess = (function(Chess) {
             };
         }
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} position
+         */
         EnPassantContext.prototype.synchronizeContextBeforeDisplacement = function(piece, position) {
             if(this.__internal__.pawnDisplacementAnalyser.isPawnCaptureDisplacement(piece, position)) {
                 this.__internal__.enPassantCoordinator.setEnPassantBoard();
@@ -25,12 +36,19 @@ var Chess = (function(Chess) {
             }
         };
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         */
         EnPassantContext.prototype.setEnPassantContext = function(piece) {
             if(piece instanceof Chess.Piece.Type.Pawn) {
                 this.__internal__.enPassantCoordinator.setEnPassantBoard();
             }
         };
 
+        /**
+         *
+         */
         EnPassantContext.prototype.restoreInitialContext = function() {
             this.__internal__.enPassantCoordinator.restoreInitialBoard();
         };

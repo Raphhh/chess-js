@@ -5,10 +5,19 @@ var Chess = (function(Chess) {
 
     Chess.Piece.PieceFactory = (function() {
 
+        /**
+         *
+         * @param text
+         * @returns {string}
+         */
         var capitalize = function(text) {
             return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
         };
 
+        /**
+         *
+         * @constructor
+         */
         function PieceFactory() {
             Chess.Reflection.ClassReflection.extend(Chess.Piece.Type.Pawn, Chess.Piece.Piece);
             Chess.Reflection.ClassReflection.extend(Chess.Piece.Type.Rook, Chess.Piece.Piece);
@@ -18,6 +27,13 @@ var Chess = (function(Chess) {
             Chess.Reflection.ClassReflection.extend(Chess.Piece.Type.King, Chess.Piece.Piece);
         }
 
+        /**
+         *
+         * @param {string} type
+         * @param {string} color
+         * @param {int} displacementsNumber
+         * @returns {Chess.Piece.Piece}
+         */
         PieceFactory.prototype.create = function(type, color, displacementsNumber) {
             return new Chess.Piece.Type[capitalize(type)](new Chess.Piece.Color(color), displacementsNumber);
         };

@@ -5,16 +5,30 @@ var Chess = (function(Chess) {
 
     Chess.Simulator.GameStateBuilder = (function() {
 
+        /**
+         *
+         * @constructor
+         */
         function GameStateBuilder() {
             this.__internal__ = {
                 gameState: null
             };
         }
 
+        /**
+         *
+         * @returns {Chess.Simulator.GameState}
+         */
         GameStateBuilder.prototype.getGameState = function() {
             return this.__internal__.gameState;
         };
 
+        /**
+         *
+         * @param {Chess.Game} game
+         * @param {bool} [changePlayingColor]
+         * @returns {Chess.Simulator.GameStateBuilder}
+         */
         GameStateBuilder.prototype.createGameState = function(game, changePlayingColor) {
             var gameData = game.exportToJson();
             if(changePlayingColor) {
@@ -25,6 +39,12 @@ var Chess = (function(Chess) {
             return this;
         };
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} position
+         * @returns {Chess.Simulator.GameStateBuilder}
+         */
         GameStateBuilder.prototype.changePiecePosition = function(piece, position) {
             piece = this.__internal__.gameState.getGame().getBoard().getPieceByPosition(piece.getSquare().getPosition());
             this.__internal__.gameState.getGame().getCoordinator().moveTo(piece, position);

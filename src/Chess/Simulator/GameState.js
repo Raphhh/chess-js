@@ -5,16 +5,29 @@ var Chess = (function(Chess) {
 
     Chess.Simulator.GameState = (function() {
 
+        /**
+         *
+         * @param {Chess.Game} game
+         * @constructor
+         */
         function GameState(game) {
             this.__internal__ = {
                 game: game
             };
         }
 
+        /**
+         *
+         * @returns {Chess.Game}
+         */
         GameState.prototype.getGame = function() {
             return this.__internal__.game;
         };
 
+        /**
+         *
+         * @returns {Chess.Simulator.MovablePiece[]}
+         */
         GameState.prototype.getMovablePieces = function() {
             var result = [];
             var pieces = this.__internal__.game.getBoard().getPieces().filter(function(piece){
@@ -35,7 +48,7 @@ var Chess = (function(Chess) {
 
         /**
          *
-         * @returns Array
+         * @returns {Chess.Simulator.MovablePiece[]}
          */
         GameState.prototype.getKingKillers = function(){
             return this.getMovablePieces().filter(function(movablePiece){

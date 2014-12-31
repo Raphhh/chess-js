@@ -3,6 +3,10 @@ var Chess = (function(Chess) {
 
     Chess.Game = (function() {
 
+        /**
+         *
+         * @returns {Chess.Piece.Piece}
+         */
         var buildEnPassantEligiblePawn = function() { //todo delegate this stuff
             return this.getBoard().getPieceByPosition(
                 new Chess.Movement.Position(
@@ -12,6 +16,10 @@ var Chess = (function(Chess) {
             );
         };
 
+        /**
+         *
+         * @returns {Chess.Movement.Position}
+         */
         var buildEnPassantEligiblePawnPosition = function() {  //todo delegate this stuff
             return new Chess.Movement.Position(
                 this.__internal__.data.enPassantContext.position.x,
@@ -19,6 +27,10 @@ var Chess = (function(Chess) {
             );
         };
 
+        /**
+         *
+         * @returns {Chess.Movement.Pawn.EnPassantCoordinator}
+         */
         var getEnPassantCoordinator = function() {  //todo delegate this stuff
             if(null === this.__internal__.enPassantCoordinator) {
                 this.__internal__.enPassantCoordinator = new Chess.Movement.Pawn.EnPassantCoordinator(
@@ -30,6 +42,11 @@ var Chess = (function(Chess) {
             return this.__internal__.enPassantCoordinator;
         };
 
+        /**
+         *
+         * @param {Object} data
+         * @constructor
+         */
         function Game(data) {
             this.__internal__ = {
                 data: data,
@@ -39,6 +56,10 @@ var Chess = (function(Chess) {
             };
         }
 
+        /**
+         *
+         * @returns {Chess.Board.Board}
+         */
         Game.prototype.getBoard = function() {
             if(null === this.__internal__.board) {
                 this.__internal__.board = new Chess.Board.Board();
@@ -47,6 +68,10 @@ var Chess = (function(Chess) {
             return this.__internal__.board;
         };
 
+        /**
+         *
+         * @returns {Chess.Movement.Coordinator}
+         */
         Game.prototype.getCoordinator = function() { //todo delegate this stuff
             if(null === this.__internal__.coordinator) {
                 this.__internal__.coordinator = new Chess.Movement.Coordinator(
@@ -64,6 +89,10 @@ var Chess = (function(Chess) {
             return this.__internal__.coordinator; //todo utiliser un proxy!
         };
 
+        /**
+         *
+         * @returns {Object}
+         */
         Game.prototype.exportToJson = function() { //todo rename in export (because it is not a json)
             //todo delegate this stuff
             var data = {
@@ -84,6 +113,11 @@ var Chess = (function(Chess) {
             return data;
         };
 
+        /**
+         *
+         * @param {bool} [changePlayingColor] - false by default
+         * @returns {boolean}
+         */
         Game.prototype.isInCheck = function(changePlayingColor) {
             var builder = new Chess.Simulator.GameStateBuilder();
             builder.createGameState(this, !changePlayingColor);

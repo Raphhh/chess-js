@@ -5,6 +5,13 @@ var Chess = (function(Chess) {
 
     Chess.Simulator.MovablePiece = (function() {
 
+        /**
+         *
+         * @param {Chess.Game} game
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Board.Square[]} squares
+         * @constructor
+         */
         function MovablePiece(game, piece, squares) {
             this.__internal__ = {
                 game: game,
@@ -13,10 +20,18 @@ var Chess = (function(Chess) {
             };
         }
 
+        /**
+         *
+         * @returns {Chess.Piece.Piece}
+         */
         MovablePiece.prototype.getPiece = function() {
             return this.__internal__.piece;
         };
 
+        /**
+         *
+         * @returns {Chess.Board.Square[]}
+         */
         MovablePiece.prototype.getEligibleSquares = function() {
             var result = [];
             for(var i = 0, len = this.__internal__.squares.length; i < len; ++i) {

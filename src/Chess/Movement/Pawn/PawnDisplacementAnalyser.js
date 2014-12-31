@@ -6,10 +6,20 @@ var Chess = (function(Chess) {
 
     Chess.Movement.Pawn.PawnDisplacementAnalyser = (function() {
 
+        /**
+         *
+         * @constructor
+         */
         function PawnDisplacementAnalyser() {
 
         }
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} position
+         * @returns {boolean}
+         */
         PawnDisplacementAnalyser.prototype.isPawnDoubleSquareDisplacement = function(piece, position) {
             if(!piece.getSquare()) {
                 throw new Error('Piece has currently no square');
@@ -20,6 +30,12 @@ var Chess = (function(Chess) {
             return false;
         };
 
+        /**
+         *
+         * @param {Chess.Piece.Piece} piece
+         * @param {Chess.Movement.Position} position
+         * @returns {boolean}
+         */
         PawnDisplacementAnalyser.prototype.isPawnCaptureDisplacement = function(piece, position) {
             if(!piece.getSquare()) {
                 throw new Error('Piece has currently no square');
