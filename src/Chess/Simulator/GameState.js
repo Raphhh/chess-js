@@ -17,7 +17,9 @@ var Chess = (function(Chess) {
 
         GameState.prototype.getMovablePieces = function() {
             var result = [];
-            var pieces = this.__internal__.game.getBoard().getPieces();
+            var pieces = this.__internal__.game.getBoard().getPieces().filter(function(piece){
+                return piece.getSquare();
+            });
             for(var i = 0, len = pieces.length; i < len; ++i) {
                 var squares = this.__internal__.game.getCoordinator().getEligibleSquares(pieces[i]);
                 if(squares.length) {

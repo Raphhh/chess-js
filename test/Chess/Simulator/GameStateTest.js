@@ -39,3 +39,22 @@ test('getMovablePieces', function() {
     strictEqual(result[0].getPiece().getSquare().getPosition().getY(), 2);
 
 });
+
+test('getMovablePieces for dead piece', function() {
+
+    var game = new Chess.Game({
+        playingColor: 'white',
+        pieces: [
+            {
+                type: 'pawn',
+                color: 'white',
+                displacementsNumber: 1
+
+            }
+        ]
+    });
+
+    var gameState = new Chess.Simulator.GameState(game);
+    var result = gameState.getMovablePieces();
+    strictEqual(result.length, 0);
+});
