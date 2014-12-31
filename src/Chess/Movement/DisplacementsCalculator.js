@@ -5,6 +5,22 @@ var Chess = (function(Chess) {
 
     Chess.Movement.DisplacementsCalculator = (function() {
 
+        var isSimulation = false;
+
+        var willBeInCheck = function(game, piece, position){
+            if(isSimulation){
+                return false;
+            }
+
+            isSimulation = true;
+            var builder = new Chess.Simulator.GameStateBuilder();
+            builder.createGameState(game);
+            builder.changePiecePosition(piece, position);
+            var result = builder.getGameState().getGame().isInCheck(true);
+            isSimulation = false;
+            return result;
+        };
+
         function DisplacementsCalculator(game) {
             this.__internal__ = {
                 game: game
@@ -30,7 +46,11 @@ var Chess = (function(Chess) {
                     square = null;
                 }
 
-                if(square && square.isValidForNewPiece(piece) && mover.getCurrentDisplacement().isValid(square)) {
+                if(square
+                    && square.isValidForNewPiece(piece)
+                    && mover.getCurrentDisplacement().isValid(square)
+                    && !willBeInCheck(this.__internal__.game, piece, newPosition)
+                ) {
                     result.push(square);
                     if(!mover.getCurrentDisplacement().isExtensible(++i) || square.getPiece()) {
                         i = 0;

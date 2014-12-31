@@ -789,3 +789,45 @@ test("getEligibleSquares with capture en passant of a white pawn not open", func
     strictEqual(result[0].getPosition().getY(), 2);
 
 });
+
+test("getEligibleSquares with in check possibility", function() {
+
+    var game = new Chess.Game({
+        playingColor: 'white',
+        pieces: [
+            {
+                "type": "king",
+                "color": "white",
+                "position": {
+                    "x": 0,
+                    "y": 0
+                },
+                "displacementsNumber": 10
+            },
+            {
+                "type": "pawn",
+                "color": "black",
+                "position": {
+                    "x": 2,
+                    "y": 1
+                },
+                "displacementsNumber": 10
+            }
+        ]
+    });
+
+    var whiteKing = game.getBoard().getPieces()[0];
+    var coordinator = game.getCoordinator();
+    var result = coordinator.getEligibleSquares(whiteKing);
+
+    strictEqual(result.length, 2);
+
+    strictEqual(result[0].getPosition().getX(), 0);
+    strictEqual(result[0].getPosition().getY(), 1);
+
+    strictEqual(result[1].getPosition().getX(), 1);
+    strictEqual(result[1].getPosition().getY(), 1);
+
+    //the position 1,0 is not allowed
+
+});
