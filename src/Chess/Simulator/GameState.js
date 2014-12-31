@@ -33,6 +33,22 @@ var Chess = (function(Chess) {
             return result;
         };
 
+        /**
+         *
+         * @returns Array
+         */
+        GameState.prototype.getKingKillers = function(){
+            return this.getMovablePieces().filter(function(movablePiece){
+                var eligibleSquares = movablePiece.getEligibleSquares();
+                for(var i = 0, iLen = eligibleSquares.length; i < iLen; ++i){
+                    if(eligibleSquares[i].getSquare().getPiece() instanceof Chess.Piece.Type.King) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        };
+
         return GameState;
 
     })();
